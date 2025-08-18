@@ -10,13 +10,16 @@
     <nav class="container">
       <ul><li><strong><a href="/">PartyFinder</a></strong></li></ul>
       <ul>
+        <li><a href="/dashboard/">Dashboard</a></li>
         {% if user.is_authenticated %}
-          <li><a href="/dashboard/">Dashboard</a></li>
           <li><a href="/admin/">Admin</a></li>
-          <li><a href="/accounts/logout/">Salir</a></li>
+          <form action="{% url 'logout' %}" method="POST">
+            {% csrf_token %} 
+            <button type="submit">Logout</button>
+          </form>
         {% else %}
-          <li><a href="/accounts/login/">Ingresar</a></li>
-          <li><a href="/accounts/signup/">Registrarse</a></li>
+          <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>
+          <li><a href="/accounts/signup/">Register</a></li>
         {% endif %}
       </ul>
     </nav>
