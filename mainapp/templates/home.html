@@ -1,6 +1,28 @@
-{% extends "navbar.html" %}
-{% block title %}Inicio{% endblock %}
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'PartyFinder/styles.css' %}">
+
 {% block content %}
-<h2>Public page</h2>
-<p>Welcome. This page does not require login.</p>
+<div class="content-wrapper">
+    <h2>Fiestas disponibles</h2>
+
+    {% if parties %}
+        <ul class="party-list">
+            {% for party in parties %}
+                <li class="party-item">
+                    <h3>{{ party.name }}</h3>
+                    <p><strong>Ciudad:</strong> {{ party.city }}</p>
+                    <p><strong>Fecha:</strong> {{ party.date }}</p>
+                    {% if party.cover %}
+                        <img src="{{ party.cover.url }}" alt="Portada de {{ party.name }}">
+                    {% endif %}
+                    <p>{{ party.description|truncatewords:20 }}</p>
+                    <a href="{% url 'party_detail' party.id %}">Ver más</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-parties">No hay fiestas disponibles en este momento.</p>
+    {% endif %}
+</div>
 {% endblock %}

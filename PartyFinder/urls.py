@@ -17,6 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from mainapp import views as main_views
+from django.conf import settings
+from django.conf.urls.static import static
+from mainapp import views as v
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,4 +29,8 @@ urlpatterns = [
     path('accounts/signup/', main_views.signup_view, name='signup'),
     path('accounts/login/', main_views.login_view, name='login'),
     path('accounts/logout/', main_views.logout_view, name='logout'),
+    path('parties/', v.party_list, name='party_list'),
+    path('parties/<int:pk>/', v.party_detail, name='party_detail'),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
