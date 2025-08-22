@@ -1,0 +1,17 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %}
+<div>
+    <a href="../">
+        <i class="fa-solid fa-arrow-left"></i>Go back
+    </a>
+    <h2>{{ event.name }}</h2>
+    <p><strong>Place:</strong> {{ event.city }}, {{ event.country }}</p>
+    <p><strong>Date:</strong> {{ event.date }}</p>
+    <p><strong>Description:</strong> {{ event.description }}</p>
+    {% for image in event.images.all %}
+        <img src="{{ image.image.url }}" alt="Image of {{ event.name }}">
+    {% endfor %}
+    
+</div>
+{% endblock %}      

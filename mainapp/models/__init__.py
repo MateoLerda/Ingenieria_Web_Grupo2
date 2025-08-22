@@ -1,3 +1,3 @@
-from .party import Party, PartyImage
+from .event import Event, EventImage
 
-__all__ = ['Party', 'PartyImage']
+__all__ = ['Event', 'EventImage']

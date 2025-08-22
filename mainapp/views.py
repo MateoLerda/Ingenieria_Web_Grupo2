@@ -5,11 +5,15 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.urls import is_valid_path
 from urllib.parse import urlparse
-from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.shortcuts import render, get_object_or_404
+from .models import Event
 
 
 def home(request):
-    return render(request, 'home.html')
+    events = Event.objects.all()
+    return render(request, 'home.html', {'events': events})
 
 @login_required
 def dashboard(request):
@@ -45,17 +49,12 @@ def logout_view(request):
     logout(request)
     return redirect('home')
 
-from django.core.paginator import Paginator
-from django.db.models import Q
-from django.shortcuts import render, get_object_or_404
-from .models import Party
-
 def party_list(request):
     q = request.GET.get('q', '').strip()
     city = request.GET.get('city', '').strip()
     date = request.GET.get('date', '').strip()  # YYYY-MM-DD
 
-    qs = Party.objects.all()
+    qs = Event.objects.all()
     if q:
         qs = qs.filter(Q(name__icontains=q) | Q(description__icontains=q))
     if city:
@@ -66,12 +65,12 @@ def party_list(request):
     paginator = Paginator(qs, 6)
     parties = paginator.get_page(request.GET.get('page'))
 
-    cities = Party.objects.order_by().values_list('city', flat=True).distinct()
+    cities = Event.objects.order_by().values_list('city', flat=True).distinct()
     return render(request, 'parties/list.html', {
         'parties': parties, 'cities': cities, 'q': q, 'city': city, 'date': date
     })
 
-def party_detail(request, pk):
-    party = get_object_or_404(Party, pk=pk)
-    return render(request, 'parties/detail.html', {'party': party})
+def event_detail(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    return render(request, 'event_detail.html', {'event': event})
 
