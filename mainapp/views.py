@@ -12,8 +12,37 @@ from .models import Event
 
 
 def home(request):
-    events = Event.objects.all()
-    return render(request, 'home.html', {'events': events})
+    """
+    Lista de fiestas con filtros (q, city, date) y autocompletado de ciudades.
+    """
+    q = request.GET.get('q', '').strip()
+    city = request.GET.get('city', '').strip()
+    date = request.GET.get('date', '').strip()  # YYYY-MM-DD
+
+    qs = Event.objects.all()
+    if q:
+        qs = qs.filter(Q(name__icontains=q) | Q(description__icontains=q))
+    if city:
+        qs = qs.filter(city__icontains=city)
+    if date:
+        qs = qs.filter(date=date)
+
+    # Paginación (opcional)
+    paginator = Paginator(qs.order_by('-date'), 9)
+    page_obj = paginator.get_page(request.GET.get('page'))
+
+    # Sugerencias para el datalist de ciudades
+    cities = Event.objects.order_by().values_list('city', flat=True).distinct()
+
+    return render(
+        request,
+        'home.html',
+        {
+            'parties': page_obj,   # iterá como parties en el template
+            'cities': cities,
+            'q': q, 'city': city, 'date': date,
+        }
+    )
 
 @login_required
 def dashboard(request):
@@ -49,27 +78,28 @@ def logout_view(request):
     logout(request)
     return redirect('home')
 
-def party_list(request):
-    q = request.GET.get('q', '').strip()
-    city = request.GET.get('city', '').strip()
-    date = request.GET.get('date', '').strip()  # YYYY-MM-DD
+# def party_list(request):
+#     q = request.GET.get('q', '').strip()
+#     city = request.GET.get('city', '').strip()
+#     date = request.GET.get('date', '').strip()  # YYYY-MM-DD
 
-    qs = Event.objects.all()
-    if q:
-        qs = qs.filter(Q(name__icontains=q) | Q(description__icontains=q))
-    if city:
-        qs = qs.filter(city__icontains=city)
-    if date:
-        qs = qs.filter(date=date)
+#     qs = Event.objects.all()
+#     if q:
+#         qs = qs.filter(Q(name__icontains=q) | Q(description__icontains=q))
+#     if city:
+#         qs = qs.filter(city__icontains=city)
+#     if date:
+#         qs = qs.filter(date=date)
 
-    paginator = Paginator(qs, 6)
-    parties = paginator.get_page(request.GET.get('page'))
+#     paginator = Paginator(qs, 6)
+#     parties = paginator.get_page(request.GET.get('page'))
 
-    cities = Event.objects.order_by().values_list('city', flat=True).distinct()
-    return render(request, 'parties/list.html', {
-        'parties': parties, 'cities': cities, 'q': q, 'city': city, 'date': date
-    })
+#     cities = Event.objects.order_by().values_list('city', flat=True).distinct()
+#     return render(request, 'parties/list.html', {
+#         'parties': parties, 'cities': cities, 'q': q, 'city': city, 'date': date
+#     })
 
+@login_required(login_url='/accounts/login/')
 def event_detail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     return render(request, 'event_detail.html', {'event': event})

@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mainapp',
+    "widget_tweaks"
 ]
 
 TEMPLATES = [{
@@ -62,7 +63,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'PartyFinder.urls'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = BASE_DIR / 'mainapp' / 'media'
 
 
 

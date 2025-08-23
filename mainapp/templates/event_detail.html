@@ -2,8 +2,8 @@
 {% load static %} 
 {% block content %}
 <div>
-    <a href="../">
-        <i class="fa-solid fa-arrow-left"></i>Go back
+    <a href="{% url 'home' %}" class="btn btn-outline-secondary mb-3">
+        ← Go back
     </a>
     <h2>{{ event.name }}</h2>
     <p><strong>Place:</strong> {{ event.city }}, {{ event.country }}</p>

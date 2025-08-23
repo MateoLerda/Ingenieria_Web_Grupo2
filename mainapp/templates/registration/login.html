@@ -1,12 +1,30 @@
-{% extends "base.html" %}
-{% block title %}Ingresar{% endblock %}
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Registrarse | PartyFinder{% endblock %}
 {% block content %}
-<h2>Login</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type="hidden" name="next" value="{{ next }}">
-  <button type="submit">Login</button>
-</form>
-<p>¿Don't have an account? <a href="/accounts/signup/"> Register</a></p>
+<div class="auth-wrapper">
+  <div class="card shadow-lg border-0 auth-card">
+    <h2>Crear cuenta</h2>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      {% for field in form %}
+      <div class="mb-3">
+        {{ field.label_tag }}
+        {% render_field field class="form-control" %}
+        {% if field.errors %}
+          <div class="text-danger small">{{ field.errors|striptags }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn w-100">Registrarse</button>
+    </form>
+
+    <p class="text-center mt-3">
+      ¿Ya tienes cuenta?
+      <a href="{% url 'login' %}">Inicia sesión</a>
+    </p>
+  </div>
+</div>
 {% endblock %}
