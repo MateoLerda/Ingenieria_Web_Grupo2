@@ -1,11 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'registration/base-user-form.html' %}
 {% load widget_tweaks %}
-{% block title %}Registrarse | PartyFinder{% endblock %}
+{% load static %}
+{% block title %} <title>Register | PartyFinder</title> {% endblock %}
 {% block content %}
 <div class="auth-wrapper">
   <div class="card shadow-lg border-0 auth-card">
-    <h2>Crear cuenta</h2>
-
+    <h2>Create account</h2>
     <form method="post" novalidate>
       {% csrf_token %}
       {{ form.non_field_errors }}
@@ -18,12 +18,12 @@
         {% endif %}
       </div>
       {% endfor %}
-      <button type="submit" class="btn w-100">Registrarse</button>
+  <button type="submit" class="auth-button d-block mx-auto">Sign up</button>
     </form>
 
     <p class="text-center mt-3">
-      ¿Ya tienes cuenta?
-      <a href="{% url 'login' %}">Inicia sesión</a>
+      ¿Already have an account?
+      <a href="{% url 'login' %}" class="auth-redirect">Sign in</a>
     </p>
   </div>
 </div>

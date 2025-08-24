@@ -1,21 +1,19 @@
 {% extends 'base.html' %}
-{% block title %}Fiestas | PartyFinder{% endblock %}
-
+{% load static %}
+{% block styles %}<link rel="stylesheet" href="{% static 'mainapp/css/events.css' %}">{% endblock %}
+{% block title %}Events | PartyFinder{% endblock %}
 {% block content %}
-<h1 class="mb-4">Fiestas</h1>
-
+<h1 class="mb-4 events-title">Events</h1>
 <form class="row g-2 mb-4" method="get" action="{% url 'home' %}">
   <div class="col-12 col-md-6">
-    <input class="form-control" name="q" placeholder="Buscar por nombre o descripción" value="{{ q }}">
+    <input class="form-control" name="q" placeholder="Search for event name" value="{{ q }}">
   </div>
 
   <div class="col-6 col-md-3">
     <input class="form-control" type="date" name="date" value="{{ date }}">
   </div>
-
-  <!-- Ciudad: input + datalist para autocompletar, pero permite escribir -->
   <div class="col-6 col-md-3">
-    <input class="form-control" name="city" list="cities" placeholder="Ciudad" value="{{ city }}">
+    <input class="form-control" name="city" list="cities" placeholder="City" value="{{ city }}">
     <datalist id="cities">
       {% for c in cities %}
         <option value="{{ c }}"></option>
@@ -24,13 +22,13 @@
   </div>
 
   <div class="col-12 text-end">
-    <button class="btn btn-primary">Filtrar</button>
-    <a class="btn btn-outline-secondary" href="{% url 'home' %}">Limpiar</a>
+    <button class="filter-button">FILTER</button>
+    <a class="clear-button" href="{% url 'home' %}">CLEAR</a>
   </div>
 </form>
 
 <div class="row g-4">
-  {% for p in parties %}
+  {% for p in events %}
     <div class="col-12 col-sm-6 col-lg-4">
       <div class="card party-card h-100 shadow-sm">
         {% if p.cover %}
@@ -40,31 +38,31 @@
           <h5 class="card-title mb-1">{{ p.name }}</h5>
           <p class="text-muted mb-2">📍 {{ p.city }} · 📅 {{ p.date }}</p>
           <p class="card-text flex-grow-1">{{ p.description|truncatewords:20 }}</p>
-          <a class="btn btn-primary mt-2" href="{% url 'event_detail' p.pk %}">Ver detalle</a>
+          <a class="btn btn-primary mt-2" href="{% url 'event_detail' p.pk %}">View details</a>
         </div>
       </div>
     </div>
   {% empty %}
     <div class="col-12">
-      <div class="alert alert-info text-center">No hay fiestas que coincidan con el filtro.</div>
+      <div class="alert alert-info text-center">There are no events matching the filter.</div>
     </div>
   {% endfor %}
 </div>
 
-{% if parties.paginator %}
+{% if events.paginator %}
   <nav class="mt-4" aria-label="Paginación">
     <ul class="pagination justify-content-center">
-      {% if parties.has_previous %}
+      {% if events.has_previous %}
         <li class="page-item">
-          <a class="page-link" href="?page={{ parties.previous_page_number }}&q={{ q }}&city={{ city }}&date={{ date }}">«</a>
+          <a class="page-link" href="?page={{ events.previous_page_number }}&q={{ q }}&city={{ city }}&date={{ date }}">«</a>
         </li>
       {% endif %}
       <li class="page-item disabled">
-        <span class="page-link">Página {{ parties.number }} de {{ parties.paginator.num_pages }}</span>
+        <span class="page-link">Page {{ events.number }} of {{ events.paginator.num_pages }}</span>
       </li>
-      {% if parties.has_next %}
+      {% if events.has_next %}
         <li class="page-item">
-          <a class="page-link" href="?page={{ parties.next_page_number }}&q={{ q }}&city={{ city }}&date={{ date }}">»</a>
+          <a class="page-link" href="?page={{ events.next_page_number }}&q={{ q }}&city={{ city }}&date={{ date }}">»</a>
         </li>
       {% endif %}
     </ul>

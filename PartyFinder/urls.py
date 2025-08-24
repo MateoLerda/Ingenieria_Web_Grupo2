@@ -28,10 +28,7 @@ urlpatterns = [
     path('accounts/signup/', main_views.signup_view, name='signup'),
     path('accounts/login/', main_views.login_view, name='login'),
     path('accounts/logout/', main_views.logout_view, name='logout'),
-    path('events/<int:event_id>', main_views.event_detail, name='event_detail'),
-    path('events/<int:event_id>/', main_views.event_detail, name='party_detail'),
-
-    
+    path('events/<int:event_id>/', main_views.event_detail, name='event_detail'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

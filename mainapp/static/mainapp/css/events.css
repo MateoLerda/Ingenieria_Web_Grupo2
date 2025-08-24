@@ -1,0 +1,93 @@
+/* ==========================
+   CARDS DE FIESTAS
+   ========================== */
+
+.filter-button {
+  background-color: #4A4E69;
+  border: none;
+  padding: 15px 20px;
+  color: white;
+  font-weight: 500;
+  font-size: 16px;
+  transition: .3s ease;
+}
+
+.filter-button:hover {
+  background-color: #22223B;
+  color: #FFFFFF;
+}
+
+.clear-button {
+  background-color: #8e9aaf;
+  color: #FFFFFF;
+  padding: 15px 20px;
+  font-weight: 500;
+  font-size: 16px;
+  transition: .3s ease;
+  border: solid 1px #8e9aaf;
+}
+
+.clear-button:hover {
+  background-color: #22223B;
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+.party-card {
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.party-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(124,58,237,0.25);
+}
+
+.party-card .card-img-top {
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.party-card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+.party-card .card-body {
+  background: white;
+  padding: 1.2rem;
+}
+
+.party-card .btn {
+  background-color: #4A4E69;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.party-card .btn:hover {
+  background: #22223B;
+  transform: scale(1.05);
+}
+
+.events-title {
+  font-size: 4rem;
+  font-weight: 600;
+  color: #4A4E69;
+}
+
+/* ==========================
+   FORMULARIOS Y BOTONES
+   ========================== */
+form .form-control {
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  transition: all 0.25s ease;
+}
+
+form .form-control:focus {
+  border-color: var(--pf-primary);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.2);
+}
+
