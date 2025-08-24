@@ -4,7 +4,7 @@
 {% block title %}Events | PartyFinder{% endblock %}
 {% block content %}
 <h1 class="mb-4 events-title">Events</h1>
-<form class="row g-2 mb-4" method="get" action="{% url 'home' %}">
+<form class="row g-2 mb-4" method="get" action="{% url 'events' %}">
   <div class="col-12 col-md-6">
     <input class="form-control" name="q" placeholder="Search for event name" value="{{ q }}">
   </div>
@@ -23,7 +23,7 @@
 
   <div class="col-12 text-end">
     <button class="filter-button">FILTER</button>
-    <a class="clear-button" href="{% url 'home' %}">CLEAR</a>
+    <a class="clear-button" href="{% url 'events' %}">CLEAR</a>
   </div>
 </form>
 

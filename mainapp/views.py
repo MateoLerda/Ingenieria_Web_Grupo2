@@ -11,7 +11,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import Event
 
 
-def home(request):
+def event_list(request):
     """
     Lista de fiestas con filtros (q, city, date) y autocompletado de ciudades.
     """
@@ -69,14 +69,14 @@ def login_view(request):
             parsed_url = urlparse(next_url)
             if not parsed_url.netloc and is_valid_path(next_url):
                 return redirect(next_url)
-            return redirect('/')
+            return redirect('/events')
     else:
         form = AuthenticationForm()
     return render(request, 'registration/login.html', {'form': form, 'next': next_url})
 
 def logout_view(request):
     logout(request)
-    return redirect('home')
+    return redirect('events')
 
 def event_detail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)

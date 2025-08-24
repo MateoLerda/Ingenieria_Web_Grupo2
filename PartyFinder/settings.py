@@ -141,4 +141,4 @@ if 'RENDER' in os.environ:
 
 
 LOGIN_URL = '/accounts/login/'
-LOGOUT_REDIRECT_URL = 'home'
+ADMIN_SITE_URL = '/events/'
