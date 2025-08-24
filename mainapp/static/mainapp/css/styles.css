@@ -22,20 +22,17 @@ body {
    NAVBAR
    ========================== */
 .navbar {
-  background: var(--pf-primary) !important;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   transition: all 0.3s ease;
 }
 
 .navbar .navbar-brand {
-  color: white !important;
   font-weight: bold;
   font-size: 1.4rem;
 }
 
 .navbar .btn {
   border-radius: 999px;
-  color: white !important;
   border: 1px solid rgba(255,255,255,0.6);
   transition: all 0.25s ease;
 }
@@ -201,3 +198,4 @@ footer:hover {
   font-weight: 500;
   border-radius: 0.5rem;
 }
+
