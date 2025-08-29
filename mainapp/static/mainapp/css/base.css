@@ -1,25 +1,24 @@
-:root {
-  --pf-primary: #7c3aed;   /* violeta intenso */
-  --pf-secondary: #06b6d4; /* turquesa */
-  --pf-accent: #f59e0b;    /* naranja */
-  --pf-bg: #f4f6fa;
-  --pf-dark: #1e1e2f;
-}
-
 body {
   font-family: "Nunito Sans", sans-serif;
   background: linear-gradient(135deg, #f4f6fa 0%, #e9f1ff 50%, #f7f2ff 100%);
-  color: var(--pf-dark);
-  line-height: 1.6;
   transition: background 0.3s ease;
   min-height: 100vh;
 }
 
-.navbar {
+.navbar{
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   transition: all 0.3s ease;
   background-color: #22223B;
   padding: 5px;
+}
+
+.nav-link-theme{
+  text-transform: uppercase;
+  line-height: 21px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 1px;
+  margin: 5px 10px;
 }
 
 .navbar-brand {
@@ -32,10 +31,12 @@ body {
   background-color: #22223B;
   padding: 20px;
   transition: .7s ease;
+  text-decoration: none;
 }
 
 .nav-buttons:hover {
   background-color: #f2e9e4e5;
+  color: #22223B;
   transform: translateY(-2px);
   text-decoration: none;
 }
