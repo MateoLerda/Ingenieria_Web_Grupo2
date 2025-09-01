@@ -1,0 +1,49 @@
+body {
+    background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url('../img/background-partyfinder.jpeg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center top;
+    font-family: "Nunito Sans", sans-serif;
+}
+
+.app-logo {
+  max-width: 40%;
+  height: auto;
+}
+
+.home-options {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    gap: 10px;
+}
+
+.home-btn {
+    width: 300px;
+    height: auto;
+    border: none;
+    border-radius: 5px;
+    padding: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-family: "Nunito Sans", sans-serif;
+    line-height: 21px;
+    font-size: 18px;
+    letter-spacing: 1px;
+    background-color: rgba(34, 34, 59, 0.85);
+    color: #FFFFFF;
+    transition: .3s ease;
+}
+
+.home-btn a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.home-btn:hover {
+    background-color: #f2e9e4e5;
+    color: #22223B;
+    transform: translateY(-2px);
+    text-decoration: none;
+}
