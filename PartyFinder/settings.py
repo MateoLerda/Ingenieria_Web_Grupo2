@@ -35,7 +35,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mainapp',
-    "widget_tweaks"
+    "widget_tweaks",
+    'cloudinary_storage',
+    'cloudinary'
 ]
 
 TEMPLATES = [{
@@ -135,10 +137,22 @@ if 'RENDER' in os.environ:
     DATABASES = {'default': dj_database_url.config(conn_max_age=600)}
     MIDDLEWARE.insert(MIDDLEWARE.index('django.middleware.security.SecurityMiddleware') + 1,
                       'whitenoise.middleware.WhiteNoiseMiddleware')
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    MEDIA_URL = '/media/'
+    STORAGES = {
+      'default': {
+        'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage'
+      },
+      'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+      },
+    }
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    'API_KEY': os.environ.get("CLOUDINARY_API_KEY"),
+    'API_SECRET': os.environ.get("CLOUDINARY_API_SECRET")
+}
 
 LOGIN_URL = '/accounts/login/'
-ADMIN_SITE_URL = '/events/'

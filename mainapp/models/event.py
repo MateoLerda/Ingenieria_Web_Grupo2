@@ -13,12 +13,22 @@ class Event(models.Model):
 
 def get_image_filename(instance, filename):
         id = instance.event.id
-        return "event_images/%s" % (id)
+        return "event_images/%s" % id
+
+def get_video_filename(instance, filename):
+        id = instance.event.id
+        return "event_videos/%s" % id
 
 class EventImage(models.Model):
     event = models.ForeignKey(Event, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to=get_image_filename)
+    image = models.ImageField(upload_to=get_image_filename, blank=False)
 
     def __str__(self):
         return f'Imagen de {self.event.name}'
 
+class EventVideo(models.Model):
+    event = models.ForeignKey(Event, related_name='videos', on_delete=models.CASCADE)
+    video_url = models.FileField(upload_to=get_video_filename, blank=False)
+
+    def __str__(self):
+        return f'Video de {self.event.name}'

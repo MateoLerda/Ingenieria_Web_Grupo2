@@ -1,3 +1,3 @@
-from .event import Event, EventImage
+from .event import Event, EventImage, EventVideo
 
-__all__ = ['Event', 'EventImage']
+__all__ = ['Event', 'EventImage', 'EventVideo']

@@ -12,6 +12,10 @@
     {% for image in event.images.all %}
         <img src="{{ image.image.url }}" alt="Image of {{ event.name }}">
     {% endfor %}
-    
+    {% for video in event.videos.all %}
+        <video width="320" height="240" controls>
+            <source src="{{ video.video.url }}" type="video/mp4">
+        </video>
+    {% endfor %}
 </div>
 {% endblock %}      
