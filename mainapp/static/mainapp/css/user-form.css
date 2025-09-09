@@ -1,5 +1,4 @@
 body {
-  font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(135deg, #f4f6fa 0%, #e9f1ff 50%, #f7f2ff 100%);
   color: var(--pf-dark);
   line-height: 1.6;
@@ -26,6 +25,18 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 2rem 1rem;
+  position: relative;
+}
+
+.auth-container {
+  display: flex;
+  gap: 3rem;
+  max-width: 1200px;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
 }
 
 .auth-card {
@@ -35,11 +46,71 @@ body {
   max-width: 420px;
   padding: 2rem;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  z-index: 2;
 }
 
-.auth-card:hover {
+.oauth-card {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 280px;
+  padding: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
+  border: 1px solid #e9ecef;
+  position: relative;
+  margin-left: 1rem;
+  flex-shrink: 0;
+}
+
+.oauth-card h3 {
+  color: var(--pf-primary);
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.oauth-subtitle {
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+.auth-card:hover, .oauth-card:hover {
   transform: translateY(-2px);
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .auth-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+  
+  .oauth-card {
+    max-width: 420px;
+    margin-left: 0;
+  }
+  
+  .auth-wrapper {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .auth-container {
+    gap: 2rem;
+  }
+  
+  .oauth-card {
+    max-width: 260px;
+    margin-left: 0.5rem;
+  }
 }
 
 .auth-card h2 {
@@ -91,5 +162,287 @@ body {
 
 .auth-redirect:hover {
   color: #4a4e6983;
+}
+
+/* ==========================
+   SOCIAL AUTH BUTTONS
+   ========================== */
+.social-auth {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.google-button, .twitter-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid #dadce0;
+  background-color: #ffffff;
+  color: #3c4043;
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.1);
+}
+
+.google-button:hover, .twitter-button:hover {
+  background-color: #f8f9fa;
+  border-color: #c6c6c6;
+  box-shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.15);
+  color: #3c4043;
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.google-button:active, .twitter-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.1);
+}
+
+.google-icon, .twitter-icon {
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.social-signup-container {
+  display: flex;
+  gap: 3rem;
+  max-width: 1000px;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.social-signup-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 500px;
+  padding: 2.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.social-signup-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.social-provider-info {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.google-logo-large {
+  margin-bottom: 1rem;
+}
+
+.social-provider-info h2 {
+  color: var(--pf-primary);
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.welcome-text {
+  color: #6c757d;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+.google-account-info {
+  background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #d4edda;
+}
+
+.info-header {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.info-header h4 {
+  color: #155724;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.info-subtitle {
+  color: #6c757d;
+  font-size: 0.8rem;
+  margin-bottom: 0;
+}
+
+.completion-notice {
+  background: linear-gradient(135deg, #fff3cd 0%, #fdf6e3 100%);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #ffeaa7;
+  text-align: center;
+}
+
+.completion-notice h4 {
+  color: #856404;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.completion-notice p {
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin-bottom: 0;
+}
+
+.account-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.account-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.account-label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.875rem;
+}
+
+.account-value {
+  font-weight: 500;
+  color: #22223B;
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+.completion-form {
+  margin-bottom: 1.5rem;
+}
+
+.form-actions {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.complete-button {
+  background-color: #22223B;
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 200px;
+  justify-content: center;
+}
+
+.complete-button:hover {
+  background-color: #4A4E69;
+  transform: translateY(-2px);
+}
+
+.button-icon {
+  transition: transform 0.2s ease;
+}
+
+.complete-button:hover .button-icon {
+  transform: scale(1.1);
+}
+
+.info-card {
+  background: linear-gradient(135deg, #f4f6fa 0%, #e9f1ff 100%);
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 320px;
+  padding: 2rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #e3e8f0;
+  height: fit-content;
+}
+
+.info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.info-card h3 {
+  color: var(--pf-primary);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.benefits-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  font-size: 0.875rem;
+  color: #495057;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.benefits-list li:last-child {
+  border-bottom: none;
+}
+
+.benefit-icon {
+  color: #22223B;
+  flex-shrink: 0;
+}
+
+/* Responsive Design for Social Signup */
+@media (max-width: 768px) {
+  .social-signup-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  .info-card {
+    max-width: 500px;
+  }
+  
+  .social-signup-card {
+    padding: 2rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .social-signup-container {
+    gap: 2rem;
+  }
+  
+  .info-card {
+    max-width: 280px;
+  }
 }
 
