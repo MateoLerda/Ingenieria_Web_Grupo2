@@ -30,6 +30,7 @@ urlpatterns = [
     path('accounts/login/', main_views.login_view, name='login'),
     path('accounts/logout/', main_views.logout_view, name='logout'),
     path('events/<int:event_id>/', main_views.event_detail, name='event_detail'),
+    path('activate/<uidb64>/<token>/', main_views.activate_account, name='activate'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

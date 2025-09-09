@@ -1,8 +1,16 @@
 {% extends 'registration/base-user-form.html' %}
 {% load widget_tweaks %}
 {% load static %}
+{% csrf_token %}
 {% block title %} <title>Login | PartyFinder</title> {% endblock %}
 {% block content %}
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-info fw-bold" role="alert">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
 <div class="auth-wrapper">
   <div class="card shadow-lg border-0 auth-card">
     <h2>Login</h2>
