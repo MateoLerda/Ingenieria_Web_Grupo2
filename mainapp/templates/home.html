@@ -23,12 +23,21 @@
                     Check our events!
                 </a>
             </button>
+            {% if user.is_authenticated %}
+            <button class="home-btn">
+                <a href="">
+                    <i class="fa-solid fa-money-bill-trend-up"></i>
+                    Publish your event!
+                </a>
+            </button>
+            {% else %}
             <button class="home-btn">
                 <a href="{% url 'signup' %}">
                     <i class="fa-solid fa-handshake"></i>
                     Join us now
                 </a>
             </button>
+            {% endif %}
             <button class="home-btn">
                 <a href="">
                     <i class="fa-solid fa-people-group"></i>

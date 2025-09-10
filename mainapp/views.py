@@ -62,7 +62,6 @@ def activate_account(request, uidb64, token):
         user = User.objects.get(pk=uid)
     except:
         user = None
-
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
@@ -91,6 +90,11 @@ def signup_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
+            User = get_user_model()
+            email = form.cleaned_data.get('email')
+            if User.objects.filter(email=email).exists():
+                messages.error(request, 'A user with this email address already exists.')
+                return render(request, 'registration/signup.html', {'form': form})
             user = form.save(commit=False)
             user.is_active = False
             user.save()
