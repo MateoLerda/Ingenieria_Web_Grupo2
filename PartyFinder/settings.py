@@ -9,8 +9,13 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
+from dotenv import load_dotenv
 from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")  
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +25,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-bdq8*6agx(s8a4u1abk)bv48mify0e61$!^3#fg2++s1-ua6!e'
+SECRET_KEY = os.environ.get("DJANGO_SECRET")
 
-SITE_ID = 3
-
+SITE_ID = int(os.environ.get("SITE_ID"))
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG")
 
 ALLOWED_HOSTS = []
 
@@ -160,7 +164,7 @@ else:
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-import os
+
 import dj_database_url
 
 if 'RENDER' in os.environ:
@@ -172,6 +176,7 @@ if 'RENDER' in os.environ:
                       'whitenoise.middleware.WhiteNoiseMiddleware')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     MEDIA_URL = '/media/'
+    SITE_ID = 3
     STORAGES = {
       'default': {
         'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage'

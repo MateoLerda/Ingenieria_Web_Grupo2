@@ -16,6 +16,7 @@ dependencies = [
     "pillow>=11.3.0",
     "psycopg2-binary>=2.9.10",
     "pyjwt>=2.10.1",
+    "python-dotenv>=1.1.1",
     "six>=1.17.0",
     "whitenoise[brotli]>=6.9.0",
 ]

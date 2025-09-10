@@ -95,10 +95,12 @@ def signup_view(request):
             user.is_active = False
             user.save()
             activateEmail(request, user, form.cleaned_data.get('email'), form.cleaned_data.get('full_name'))
-            return redirect('signup')
+            return redirect('login')
+        else:
+            messages.error(request, 'Unsuccessful registration. Invalid information.')
     else:
         form = CustomUserCreationForm()
-        return render(request, 'registration/signup.html', {'form': form})
+    return render(request, 'registration/signup.html', {'form': form})
 
 def login_view(request):
     next_url = request.GET.get('next', '/')
