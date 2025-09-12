@@ -73,9 +73,11 @@ def activate_account(request, uidb64, token):
 
 def activateEmail(request, user, to_email, user_fullname):
     email_subject = "Activate your PartyFinder account!"
+    current_site = get_current_site(request)
+    domain = current_site.domain.rstrip('/')  
     message = render_to_string("registration/email_confirmation.html", {
         'user': user_fullname,
-        'domain': get_current_site(request).domain,
+        'domain': domain,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': account_activation_token.make_token(user),
         "protocol": 'https' if request.is_secure() else 'http'
