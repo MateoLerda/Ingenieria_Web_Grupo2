@@ -16,22 +16,25 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from mainapp import views as main_views
+from events import views as event_views
+from users import views as user_views
 from django.conf import settings
 from django.conf.urls.static import static
-from mainapp import views as v
+
 
 urlpatterns = [
-    path('', main_views.home_view, name='home'),
+    path('', event_views.home_view, name='home'),
     path('admin/', admin.site.urls),
-    path('events/', main_views.event_list, name='events'),
-    path('dashboard/', main_views.dashboard, name='dashboard'),
-    path('accounts/signup/', main_views.signup_view, name='signup'),
-    path('accounts/login/', main_views.login_view, name='login'),
-    path('accounts/logout/', main_views.logout_view, name='logout'),
+    path('events/', event_views.event_list, name='events'),
+    path('events/create/', event_views.create_event, name='create_event'),
+    path('events/create/<event_id>/media/', event_views.add_event_media, name='add_event_media'),
+    path('dashboard/', event_views.dashboard, name='dashboard'),
+    path('accounts/signup/', user_views.signup_view, name='signup'),
+    path('accounts/login/', user_views.login_view, name='login'),
+    path('accounts/logout/', user_views.logout_view, name='logout'),
     path('accounts/', include('allauth.urls')), 
-    path('events/<int:event_id>/', main_views.event_detail, name='event_detail'),
-    path('activate/<uidb64>/<token>/', main_views.activate_account, name='activate'),
+    path('events/<int:event_id>/', event_views.event_detail, name='event_detail'),
+    path('activate/<uidb64>/<token>/', user_views.activate_account, name='activate'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

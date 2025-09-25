@@ -1,0 +1,53 @@
+{% extends 'events/base.html'%}
+{% load static %}
+{% load widget_tweaks %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'events/css/create_event.css' %}">
+{% endblock %}
+{% block content %}
+<section class="create-event-hero">
+  <div>
+    <h2>Add media to your event</h2>
+    <p>Optionally upload more images. You can skip this step and finish later.</p>
+  </div>
+  <div class="preview-card">
+    <img id="flyerPreview" class="preview-flyer" alt="Flyer preview"
+      {% if flyer %}
+        {% if flyer.url %}src="{{ flyer.url }}"{% else %}src="{{ flyer }}"{% endif %}
+      {% elif event and event.flyer %}
+        src="{{ event.flyer.url }}"
+      {% endif %}
+    />
+    <div class="small text-muted mt-2">Flyer uploaded</div>
+  </div>
+</section>
+
+<div class="event-form">
+  <div class="form-header">
+    <div><strong>Event media</strong></div>
+    <span class="badge-step">Step 2/2</span>
+  </div>
+  <div class="form-body">
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+      <div class="media-dropzone" id="mediaDropzone">
+        <input id="mediaInput" name="media" type="file" class="d-none" accept="image/*" multiple>
+        <label for="mediaInput" class="drop-label" tabindex="0">
+          <span class="plus">+</span>
+          <span class="hint">Add images</span>
+        </label>
+      </div>
+
+      <div class="thumbs" id="thumbs"></div>
+
+      <div class="actions">
+        <a href="{% url 'events' %}" class="btn btn-outline-secondary">Skip</a>
+        <button class="btn btn-pf" type="submit">Finish</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'events/js/create_event_media.js' %}"></script>
+{% endblock %}

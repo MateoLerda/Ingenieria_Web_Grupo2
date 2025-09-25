@@ -1,0 +1,76 @@
+{% extends 'events/base.html'%}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'events/css/create_event.css' %}">
+{% endblock %}
+{% block content %}
+
+<section class="create-event-hero">
+    <div>
+        <h2>Create a new event</h2>
+        <p>Complete the details below. You can upload a flyer and preview it instantly.</p>
+        <p>We strongly recommend to use high-quality horizontal images for the flyer.</p>
+    </div>
+    <div class="preview-card">
+        <img id="flyerPreview" class="preview-flyer" alt="Flyer preview" />
+        <div class="small text-muted mt-2">Flyer live preview</div>
+    </div>
+  
+</section>
+
+{# Capture messages (if any) to trigger success modal #}
+{% if messages %}
+    <div id="messages-data" class="d-none">
+        {% for message in messages %}
+            <div data-tag="{{ message.tags }}" data-text="{{ message|escape }}"></div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="event-form">
+    <div class="form-header">
+        <div><strong>Event details</strong></div>
+        <span class="badge-step">Step 1/2</span>
+    </div>
+    <div class="form-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+                        <div class="form-grid">
+                                {% load widget_tweaks %}
+                                {% for field in form %}
+                                    {% if field.name in 'name,country,state_province,city' %}
+                                        <div class="col-6">
+                                            <label class="form-label">{{ field.label }}</label>
+                                            {% render_field field class="form-control" placeholder=field.label required="required" %}
+                                        </div>
+                                    {% elif field.name == 'date' %}
+                                        <div class="col-6">
+                                            <label class="form-label">When will the event take place?</label>
+                                            {% render_field field class="form-control" type="date" required="required" max="2100-12-31" id="eventDateInput" %}
+                                            <div class="form-text">Allowed range: up to year 2100.</div>
+                                        </div>
+                                    {% elif field.name == 'description' %}
+                                        <div class="col-12">
+                                            <label class="form-label">{{ field.label }}</label>
+                                            {% render_field field class="form-control" rows="4" placeholder="Tell people about the event" required="required" %}
+                                        </div>
+                                    {% elif field.name == 'flyer' %}
+                                        <div class="col-12">
+                                            <label class="form-label">{{ field.label }}</label>
+                                            {% render_field field class="form-control" accept="image/*" id="flyerInput" %}
+                                            <div class="form-text">Upload a JPG/PNG image up to ~5MB.</div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                        </div>
+            <div class="actions">
+                <a href="{% url 'events' %}" class="btn btn-outline-secondary">Cancel</a>
+                <button class="btn btn-pf" type="submit" href>Next</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+    {% block scripts %}
+    <script src="{% static 'events/js/create_event.js' %}"></script>
+    {% endblock %}

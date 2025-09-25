@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("DJANGO_SECRET")
 
-SITE_ID = int(os.environ.get("SITE_ID"))
+SITE_ID = 4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG")
 
@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mainapp',
+    'events',
+    'users',
     "widget_tweaks",
     'cloudinary_storage',
     'cloudinary',
@@ -96,7 +97,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'PartyFinder.urls'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'mainapp' / 'media'
+MEDIA_ROOT = BASE_DIR  / 'media'
 
 
 
@@ -132,6 +133,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+from django.contrib import messages
+
+# Map Django message levels to simple tag names used by our CSS classes
+MESSAGE_TAGS = {
+    messages.DEBUG: 'info',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -153,7 +165,7 @@ STATIC_URL = '/static/'
 # Solo para desarrollo
 if DEBUG:
     STATICFILES_DIRS = [
-        BASE_DIR / 'mainapp' / 'static',
+        BASE_DIR / 'static',
     ]
 else:
     STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -193,7 +205,6 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': os.environ.get("CLOUDINARY_API_SECRET")
 }
 
-LOGIN_URL = '/accounts/login/'
 
 # Emailing settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -214,3 +225,4 @@ AUTHENTICATION_BACKENDS = (
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 SOCIALACCOUNT_LOGIN_ON_GET=True
+AUTH_USER_MODEL = 'users.CustomUserModel'
