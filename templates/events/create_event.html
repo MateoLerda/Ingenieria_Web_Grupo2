@@ -54,6 +54,16 @@
                                             <label class="form-label">{{ field.label }}</label>
                                             {% render_field field class="form-control" rows="4" placeholder="Tell people about the event" required="required" %}
                                         </div>
+                                           {% elif field.name == 'available_tickets' %}
+                                        <div class="col-6">
+                                            <label class="form-label">Available Tickets</label>
+                                            {% render_field field class="form-control" type="number" min="0" placeholder="Enter ticket amount" required="required" %}
+                                        </div>
+                                    {% elif field.name == 'max_tickets_per_user' %}
+                                        <div class="col-6">
+                                            <label class="form-label">Max Tickets per User</label>
+                                            {% render_field field class="form-control" type="number" min="1" placeholder="Max per user" required="required" %}
+                                        </div>
                                     {% elif field.name == 'flyer' %}
                                         <div class="col-12">
                                             <label class="form-label">{{ field.label }}</label>

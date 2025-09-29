@@ -6,7 +6,7 @@ from events.models import Event, EventImage, EventVideo
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['name', 'country', 'state_province', 'city', 'date', 'description', 'flyer']
+        fields = ['name', 'country', 'state_province', 'city','available_tickets', 'max_tickets_per_user',  'date',  'description', 'flyer']
         error_messages = {
             'name': {
                 'required': 'Event name is required.',
@@ -22,6 +22,12 @@ class EventForm(forms.ModelForm):
             },
             'city': {
                 'required': 'City is required.',
+            },
+            'available_tickets': {
+                'required': 'Available tickets is required.',
+            },
+            'max_tickets_per_user': {
+                'required': 'Max tickets per user is required.',
             },
             'date': {
                 'required': 'Event date is required.',

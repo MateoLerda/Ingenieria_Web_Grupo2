@@ -1,0 +1,16 @@
+{% extends "events/base.html" %}
+{% load static %}
+
+
+{% block content %}
+<div class="text-center mt-5">
+<h2 class="text-success">🎉 Compra realizada con éxito!</h2>
+<p>Serás redirigido a la página principal en unos segundos...</p>
+</div>
+
+<script>
+setTimeout(() => {
+window.location.href = "{% url 'home' %}";
+}, 8000);
+</script>
+{% endblock %}

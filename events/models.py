@@ -16,6 +16,8 @@ class Event(models.Model):
     description = models.TextField()
     flyer = models.ImageField(upload_to=get_flyer_filename)
     created_by = models.ForeignKey(CustomUserModel, related_name='created_events', on_delete=models.CASCADE)
+    available_tickets = models.PositiveIntegerField()  
+    max_tickets_per_user = models.PositiveIntegerField(default=1)  
 
     REQUIRED_FIELDS = ['name', 'city', 'state_province', 'country', 'date', 'description', 'flyer', 'created_by']
 

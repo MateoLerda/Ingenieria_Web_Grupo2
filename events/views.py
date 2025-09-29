@@ -1,4 +1,5 @@
 from datetime import date
+from pyexpat.errors import messages
 from django.shortcuts import render
 from events.forms import EventForm
 from django.contrib.auth.decorators import login_required
@@ -19,7 +20,8 @@ def event_list(request):
     """
     q = request.GET.get('q', '').strip()
     city = request.GET.get('city', '').strip()
-    date = request.GET.get('date', '').strip() 
+    date = request.GET.get('date', '').strip()
+    only_available = request.GET.get('only_available', '') 
 
     qs = Event.objects.all()
     if q:
@@ -28,6 +30,8 @@ def event_list(request):
         qs = qs.filter(city__icontains=city)
     if date:
         qs = qs.filter(date=date)
+    if only_available:  
+        qs = qs.filter(available_tickets__gt=0)
 
     paginator = Paginator(qs.order_by('-date'), 9)
     page_obj = paginator.get_page(request.GET.get('page'))
@@ -40,7 +44,10 @@ def event_list(request):
         {
             'events': page_obj, 
             'cities': cities,
-            'q': q, 'city': city, 'date': date,
+            'q': q,
+            'city': city,
+            'date': date,
+            'only_available': only_available
         }
     )
 
@@ -92,3 +99,31 @@ def add_event_media(request, event_id):
             return render(request, 'events/event_detail.html', {'event': event})
     else:
         return redirect('events')
+    
+@login_required
+def buy_tickets(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+
+    if request.method == "POST":
+        quantity = int(request.POST.get("quantity", 1))
+
+        # Validaciones
+        if quantity < 1 or quantity > event.max_tickets_per_user:
+            messages.error(request, f"Solo puedes comprar entre 1 y {event.max_tickets_per_user} entradas.")
+            return redirect("event_detail", event_id=event.id)
+
+        if quantity > event.available_tickets:
+            messages.error(request, "No hay suficientes entradas disponibles.")
+            return redirect("event_detail", event_id=event.id)
+
+        # Descontar entradas
+        event.available_tickets -= quantity
+        event.save()
+
+        # Redirigir a página de éxito
+        return redirect("purchase_success")
+
+    return redirect("event_detail", event_id=event.id)
+
+def purchase_success(request):
+    return render(request, "events/purchase_success.html")
