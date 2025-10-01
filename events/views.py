@@ -127,3 +127,25 @@ def buy_tickets(request, event_id):
 
 def purchase_success(request):
     return render(request, "events/purchase_success.html")
+
+@login_required
+def update_tickets(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+
+    # Seguridad: solo el creador puede editar
+    if event.created_by != request.user:
+        return redirect("event_detail", event_id=event.id)
+
+    if request.method == "POST":
+        try:
+            new_available = int(request.POST.get("available_tickets"))
+            if new_available < 0:
+                raise ValueError("Cantidad inválida")
+            event.available_tickets = new_available
+            event.save()
+            return redirect("event_detail", event_id=event.id)
+        except (ValueError, TypeError):
+            # Si ponen algo inválido, vuelve al detalle
+            return redirect("event_detail", event_id=event.id)
+
+    return render(request, "events/update_tickets.html", {"event": event})

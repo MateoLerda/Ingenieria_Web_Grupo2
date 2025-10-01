@@ -1,0 +1,14 @@
+{% extends 'events/base.html' %}
+{% block content %}
+<h2>Editar entradas para {{ event.name }}</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label">Entradas disponibles</label>
+    <input type="number" name="available_tickets" value="{{ event.available_tickets }}" min="0" class="form-control" required>
+  </div>
+  <button type="submit" class="btn btn-success">Guardar cambios</button>
+  <a href="{% url 'event_detail' event.id %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

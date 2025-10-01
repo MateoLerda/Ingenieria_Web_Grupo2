@@ -5,28 +5,73 @@
     <a href="{% url 'events' %}" class="btn btn-outline-secondary mb-3">
         ← Go back
     </a>
+
     <h2>{{ event.name }}</h2>
     <p><strong>Place:</strong> {{ event.city }}, {{ event.country }}</p>
     <p><strong>Date:</strong> {{ event.date }}</p>
     <p><strong>Description:</strong> {{ event.description }}</p>
+
     {% for image in event.images.all %}
-    <img src="{{ image.image_url }}" alt="Image of {{ event.name }}">
+      <img src="{{ image.image_url }}" alt="Image of {{ event.name }}" class="img-fluid mb-2">
     {% endfor %}
+
     {% for video in event.videos.all %}
-    <video width="320" height="240" controls>
-        <source src="{{ video.video_url }}" type="video/mp4">
-    </video>
+      <video width="320" height="240" controls class="mb-2">
+          <source src="{{ video.video_url }}" type="video/mp4">
+      </video>
     {% endfor %}
-    <form method="post" action="{% url 'buy_tickets' event.id %}">
+
+    <!-- FORMULARIO DE COMPRA -->
+    <form id="purchaseForm" method="post" action="{% url 'buy_tickets' event.id %}"
+          data-max-per-user="{{ event.max_tickets_per_user }}"
+          data-available-tickets="{{ event.available_tickets }}">
         {% csrf_token %}
         <div class="d-flex align-items-center gap-2">
-            <input type="number" name="quantity" min="1" max="{{ event.max_tickets_per_user }}"
+            <input type="number" id="quantity" name="quantity" min="1" max="{{ event.max_tickets_per_user }}"
                 class="form-control w-auto" value="1" required>
-            <button type="submit" class="btn btn-success">Comprar</button>
+            <button type="submit" id="buyBtn" class="btn btn-success">Comprar</button>
         </div>
         <small class="text-muted">Máximo {{ event.max_tickets_per_user }} entradas por usuario.</small>
     </form>
-    <p><strong>Entradas disponibles:</strong> {{ event.available_tickets }}</p>
 
+    <p class="mt-2"><strong>Entradas disponibles:</strong>
+        <span id="availableTickets">{{ event.available_tickets }}</span>
+    </p>
+
+    {% if user.is_authenticated and user == event.created_by %}
+      <div class="mt-3">
+        <a href="{% url 'update_tickets' event.id %}" class="btn btn-success">
+          Editar entradas disponibles
+        </a>
+      </div>
+    {% endif %}
 </div>
+
+<!-- MODAL DE CONFIRMACIÓN DE COMPRA -->
+<div class="modal fade" id="confirmPurchaseModal" tabindex="-1" aria-labelledby="confirmPurchaseLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmPurchaseLabel">Confirmar compra</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmText">¿Estás seguro de que quieres comprar <span id="confirmQuantity"></span> entrada(s)?</p>
+        <p class="text-danger" id="confirmWarning"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" id="modalConfirm">Sí, comprar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'events/js/ticket_purchase.js' %}"></script>
+{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'events/css/ticket_purchase.css' %}">
 {% endblock %}

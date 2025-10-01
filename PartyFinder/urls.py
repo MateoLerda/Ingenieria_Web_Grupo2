@@ -36,6 +36,7 @@ urlpatterns = [
     path('events/<int:event_id>/', event_views.event_detail, name='event_detail'),
     path('activate/<uidb64>/<token>/', user_views.activate_account, name='activate'),
     path("events/<int:event_id>/buy/", event_views.buy_tickets, name="buy_tickets"),
+    path("events/<int:event_id>/update_tickets/", event_views.update_tickets, name="update_tickets"),
     path("purchase_success/", event_views.purchase_success, name="purchase_success")
 ]
 if settings.DEBUG:
