@@ -45,15 +45,27 @@
   {% for p in events %}
     <div class="col-12 col-sm-6 col-lg-4">
       <div class="card party-card h-100 shadow-sm">
-        {% if p.cover %}
-          <img src="{{ p.cover.url }}" class="card-img-top object-fit-cover" alt="{{ p.name }}">
+        {% if p.flyer %}
+          <img src="{{ p.flyer.url }}" class="card-img-top object-fit-cover" alt="{{ p.name }} flyer">
         {% endif %}
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title mb-1">{{ p.name }}</h5>
-          <p class="text-muted mb-2">📍 {{ p.city }} · 📅 {{ p.date }}</p>
-          <p class="card-text flex-grow-1">{{ p.description|truncatewords:20 }}</p>
-          <a class="btn btn-primary mt-2" href="{% url 'event_detail' p.pk %}">View details</a>
-        </div>
+          <div class="card-body d-flex flex-column align-items-center text-center">
+            <h5 class="card-title mb-1 event-card-title card-section-title">{{ p.name|upper }}</h5>
+
+            <div class="card-section-meta text-muted">
+              <span class="meta-item">
+                <img src="{% static 'events/img/icon-location.svg' %}" class="icon icon-location" alt="Location">
+                {{ p.city }}
+              </span>
+              <span class="meta-item">
+                <img src="{% static 'events/img/icon-calendar.svg' %}" class="icon icon-calendar" alt="Date">
+                {{ p.date }}
+              </span>
+            </div>
+
+            <div class="card-section-actions">
+              <a class="btn btn-pf" href="{% url 'event_detail' p.pk %}">VIEW DETAILS</a>
+            </div>
+          </div>
       </div>
     </div>
   {% empty %}

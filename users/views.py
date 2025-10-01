@@ -102,6 +102,9 @@ def login_view(request):
             if not parsed_url.netloc and is_valid_path(next_url):
                 return redirect(next_url)
             return redirect('/events')
+        else:
+            messages.error(request, 'Invalid username or password.')
+            return render(request, 'users/login.html', {'form': form, 'next': next_url})
 
 def logout_view(request):
     logout(request)

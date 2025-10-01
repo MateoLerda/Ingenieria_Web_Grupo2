@@ -47,7 +47,7 @@
 }
 
 .party-card .card-img-top {
-  height: 200px;
+  height: 280px;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
@@ -61,22 +61,34 @@
   padding: 1.2rem;
 }
 
-.party-card .btn {
-  background-color: #4A4E69;
-  border: none;
-  transition: all 0.3s ease;
+.event-card-title {
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 1px; 
+  font-size: 2.5rem;
+  font-family: "Inter", sans-serif;
 }
 
-.party-card .btn:hover {
+.party-card .text-muted { text-align: center; }
+
+.btn-pf {
   background: #22223B;
-  transform: scale(1.05);
+  color: #FFFFFF;
+  border: 2px solid #22223B;
+  padding: 10px 16px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: all 0.25s ease;
+}
+.btn-pf:hover {
+  background: #4A4E69;
+  border-color: #4A4E69;
+  color: #FFFFFF;
+  transform: translateY(-1px);
 }
 
-.events-title {
-  font-size: 4rem;
-  font-weight: 600;
-  color: #4A4E69;
-}
 
 /* ==========================
    FORMULARIOS Y BOTONES
@@ -89,5 +101,40 @@ form .form-control {
 
 form .form-control:focus {
   box-shadow: 0 0 0 3px rgba(124,58,237,0.2);
+}
+
+/* ==========================
+   CARD SECTION DIVIDERS
+   ========================== */
+.card-section-title{
+  width: 100%;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.card-section-meta{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+.card-section-meta .meta-item{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+.icon{ display:inline-block; vertical-align: middle; }
+.icon-location{ width: 16px; height: 16px; }
+
+.card-section-actions{
+  width: 100%;
+  padding-top: 10px;
+  margin-top: 10px;
 }
 

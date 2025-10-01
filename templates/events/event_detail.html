@@ -11,20 +11,31 @@
     <p><strong>Date:</strong> {{ event.date }}</p>
     <p><strong>Description:</strong> {{ event.description }}</p>
 
+    {% if event.flyer %}
+      <div class="mb-3">
+        <img src="{{ event.flyer.url }}" alt="Flyer of {{ event.name }}" class="img-fluid">
+      </div>
+    {% endif %}
+
     {% for image in event.images.all %}
-      <img src="{{ image.image_url }}" alt="Image of {{ event.name }}" class="img-fluid mb-2">
+      {% if image.image_url %}
+        <img src="{{ image.image_url.url }}" alt="Image of {{ event.name }}" class="img-fluid mb-2">
+      {% endif %}
     {% endfor %}
 
     {% for video in event.videos.all %}
-      <video width="320" height="240" controls class="mb-2">
-          <source src="{{ video.video_url }}" type="video/mp4">
-      </video>
+      {% if video.video_url %}
+        <video width="320" height="240" controls class="mb-2">
+            <source src="{{ video.video_url.url }}" type="video/mp4">
+        </video>
+      {% endif %}
     {% endfor %}
 
     <!-- FORMULARIO DE COMPRA -->
-    <form id="purchaseForm" method="post" action="{% url 'buy_tickets' event.id %}"
-          data-max-per-user="{{ event.max_tickets_per_user }}"
-          data-available-tickets="{{ event.available_tickets }}">
+  <form id="purchaseForm" method="post" action="{% url 'buy_tickets' event.id %}"
+      data-max-per-user="{{ event.max_tickets_per_user }}"
+      data-available-tickets="{{ event.available_tickets }}"
+      {% if not user.is_authenticated %}data-redirect-login="{% url 'login' %}?next={{ request.get_full_path }}"{% endif %}>
         {% csrf_token %}
         <div class="d-flex align-items-center gap-2">
             <input type="number" id="quantity" name="quantity" min="1" max="{{ event.max_tickets_per_user }}"

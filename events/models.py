@@ -1,11 +1,13 @@
 from django.db import models
 import os
+from uuid import uuid4
 from users.models import CustomUserModel
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 def get_flyer_filename(instance, filename):
-        id = instance.id
-        return "event_flyers/%s" % id
+    # Use a stable folder and unique filename; avoid instance.id (None on first save)
+    base, ext = os.path.splitext(os.path.basename(filename))
+    return f"event_flyers/{uuid4().hex}{ext.lower()}"
 
 class Event(models.Model):
     name = models.CharField(max_length=120)

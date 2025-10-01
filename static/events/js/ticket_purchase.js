@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const qtyInput = document.getElementById('quantity');
     const maxPerUser = Number(form.dataset.maxPerUser || 1);
     const available = Number(form.dataset.availableTickets || 0);
+    const redirectLogin = form.dataset.redirectLogin;
 
     // Bootstrap modal
     const modalEl = document.getElementById('confirmPurchaseModal');
@@ -22,6 +23,12 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', function (e) {
         e.preventDefault();
         if (submitting) return;
+
+        if (redirectLogin) {
+            const url = new URL(redirectLogin, window.location.origin);
+            window.location.href = url.toString();
+            return;
+        }
 
         const qty = parseInt(qtyInput.value, 10) || 0;
 
