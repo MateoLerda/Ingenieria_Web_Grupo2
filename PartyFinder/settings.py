@@ -187,7 +187,6 @@ if 'RENDER' in os.environ:
                       'whitenoise.middleware.WhiteNoiseMiddleware')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     MEDIA_URL = '/media/'
-    SITE_ID = 4
     STORAGES = {
       'default': {
         'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage'
