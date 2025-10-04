@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.twitter',
+    'haystack',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -225,3 +226,10 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 SOCIALACCOUNT_LOGIN_ON_GET=True
 AUTH_USER_MODEL = 'users.CustomUserModel'
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': BASE_DIR / 'whoosh_index',
+    },
+}

@@ -1,0 +1,5 @@
+{{ object.name }}
+{{ object.description }}
+{{ object.city }}
+{{ object.state_province }}
+{{ object.country }}

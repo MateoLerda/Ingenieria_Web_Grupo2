@@ -5,7 +5,6 @@ from users.models import CustomUserModel
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 def get_flyer_filename(instance, filename):
-    # Use a stable folder and unique filename; avoid instance.id (None on first save)
     base, ext = os.path.splitext(os.path.basename(filename))
     return f"event_flyers/{uuid4().hex}{ext.lower()}"
 

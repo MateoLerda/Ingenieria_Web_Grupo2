@@ -37,7 +37,9 @@ urlpatterns = [
     path('activate/<uidb64>/<token>/', user_views.activate_account, name='activate'),
     path("events/<int:event_id>/buy/", event_views.buy_tickets, name="buy_tickets"),
     path("events/<int:event_id>/update_tickets/", event_views.update_tickets, name="update_tickets"),
-    path("purchase_success/", event_views.purchase_success, name="purchase_success")
+    path("purchase_success/", event_views.purchase_success, name="purchase_success"),
+    path('search/', include('haystack.urls')),
+    path('rebuild_index/', event_views.rebuild_index, name='rebuild_index'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

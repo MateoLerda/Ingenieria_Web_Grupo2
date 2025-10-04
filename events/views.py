@@ -1,15 +1,18 @@
 from datetime import date
-from pyexpat.errors import messages
+from django.contrib import messages
 from django.shortcuts import render
 from events.forms import EventForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect         
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Case, When
 from django.shortcuts import render, get_object_or_404
 from .models import Event, EventImage
-import json
-from django.http import JsonResponse
+from haystack.query import SearchQuerySet
+from haystack.inputs import AutoQuery
+from django.core.management import call_command
+from django.http import HttpResponse, HttpResponseForbidden
+
 
 def home_view(request):
     return render(request, 'events/home.html')
@@ -17,23 +20,45 @@ def home_view(request):
 def event_list(request):
     """
     Lista de fiestas con filtros (q, city, date) y autocompletado de ciudades.
+    Usa Whoosh/Haystack cuando el usuario aplica filtros (q, city o date);
+    para el listado sin filtros usa el ORM.
     """
     q = request.GET.get('q', '').strip()
     city = request.GET.get('city', '').strip()
-    date = request.GET.get('date', '').strip()
-    only_available = request.GET.get('only_available', '') 
+    date_val = request.GET.get('date', '').strip()
+    only_available = request.GET.get('only_available', '')
 
-    qs = Event.objects.all()
-    if q:
-        qs = qs.filter(Q(name__icontains=q))
-    if city:
-        qs = qs.filter(city__icontains=city)
-    if date:
-        qs = qs.filter(date=date)
-    if only_available:  
-        qs = qs.filter(available_tickets__gt=0)
+    has_search_filters = bool(q or city or date_val)
 
-    paginator = Paginator(qs.order_by('-date'), 9)
+    if has_search_filters:
+        sqs = SearchQuerySet().models(Event)
+        if q:
+            sqs = sqs.filter(content=AutoQuery(q))
+        if city:
+            sqs = sqs.filter(content=city)
+        if date_val:
+            try:
+                parsed_date = date.fromisoformat(date_val)
+            except ValueError:
+                parsed_date = None
+            if parsed_date:
+                sqs = sqs.filter(content=parsed_date)
+
+        ids = [int(r.pk) for r in sqs]
+        if ids:
+            preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(ids)])
+            qs = Event.objects.filter(pk__in=ids).order_by(preserved)
+        else:
+            qs = Event.objects.none()
+
+        if only_available:
+            qs = qs.filter(available_tickets__gt=0)
+    else:
+        qs = Event.objects.all().order_by('-date')
+        if only_available:
+            qs = qs.filter(available_tickets__gt=0)
+
+    paginator = Paginator(qs, 9)
     page_obj = paginator.get_page(request.GET.get('page'))
 
     cities = Event.objects.order_by().values_list('city', flat=True).distinct()
@@ -42,13 +67,13 @@ def event_list(request):
         request,
         'events/events.html',
         {
-            'events': page_obj, 
+            'events': page_obj,
             'cities': cities,
             'q': q,
             'city': city,
-            'date': date,
-            'only_available': only_available
-        }
+            'date': date_val,
+            'only_available': only_available,
+        },
     )
 
 @login_required
@@ -149,3 +174,14 @@ def update_tickets(request, event_id):
             return redirect("event_detail", event_id=event.id)
 
     return render(request, "events/update_tickets.html", {"event": event})
+
+
+def rebuild_index(request):
+    """Rebuild the Haystack/Whoosh index. Restrict to staff users.
+
+    This endpoint is mapped from urls.py and is helpful in development/deploys.
+    """
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return HttpResponseForbidden("Not allowed")
+    call_command("rebuild_index", interactive=False, verbosity=1)
+    return HttpResponse("Index rebuilt")

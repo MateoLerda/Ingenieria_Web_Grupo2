@@ -9,7 +9,7 @@
 
 <form id="filtersForm" class="row g-2 mb-4" method="get" action="{% url 'events' %}">
   <div class="col-12 col-md-6">
-    <input class="form-control" name="q" placeholder="Search for event name" value="{{ q }}">
+    <input class="form-control" name="q" placeholder="Search for event" value="{{ q }}">
   </div>
 
   <div class="col-6 col-md-3">
@@ -35,7 +35,6 @@
   </div>
 
   <div class="col-12 text-end">
-    <!-- Botón solo para q/city/date -->
     <button type="submit" class="filter-button">FILTER</button>
     <a class="clear-button" href="{% url 'events' %}">CLEAR</a>
   </div>
