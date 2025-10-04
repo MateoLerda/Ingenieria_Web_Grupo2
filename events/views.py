@@ -11,8 +11,7 @@ from .models import Event, EventImage
 from haystack.query import SearchQuerySet
 from haystack.inputs import AutoQuery
 from django.core.management import call_command
-from django.http import HttpResponse, HttpResponseForbidden
-
+from django.http import JsonResponse
 
 def home_view(request):
     return render(request, 'events/home.html')
@@ -176,12 +175,13 @@ def update_tickets(request, event_id):
     return render(request, "events/update_tickets.html", {"event": event})
 
 
-def rebuild_index(request):
-    """Rebuild the Haystack/Whoosh index. Restrict to staff users.
 
-    This endpoint is mapped from urls.py and is helpful in development/deploys.
-    """
-    if not request.user.is_authenticated or not request.user.is_staff:
-        return HttpResponseForbidden("Not allowed")
-    call_command("rebuild_index", interactive=False, verbosity=1)
-    return HttpResponse("Index rebuilt")
+def rebuild_index(request):
+    from django.core.management import call_command
+    try:
+        call_command("rebuild_index", noinput=False)
+        result = "Index rebuilt"
+    except Exception as err:
+        result = f"Error: {err}"
+
+    return JsonResponse({"result": result})
