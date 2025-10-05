@@ -1,0 +1,20 @@
+User-agent: *
+# Rutas que permitiremos que ingresen
+Allow: /$
+Allow: /events/
+Allow: /events/[0-9]+/
+Allow: /accounts/signup/
+Allow: /accounts/login/
+Allow: /purchase_success/
+
+# Secciones que no dejaremos visitar-indexar
+Disallow: /admin/
+Disallow: /accounts/logout/
+Disallow: /events/create/
+Disallow: /events/create/
+Disallow: /dashboard/
+Disallow: /media/
+Disallow: /static/
+
+# Sitemap por si alguna vez lo creamos
+Sitemap: https://www.partyfinder.com/sitemap.xml

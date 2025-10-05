@@ -20,6 +20,7 @@ from events import views as event_views
 from users import views as user_views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
 
 
 urlpatterns = [
@@ -40,6 +41,7 @@ urlpatterns = [
     path("purchase_success/", event_views.purchase_success, name="purchase_success"),
     path('search/', include('haystack.urls')),
     path('rebuild_index/', event_views.rebuild_index, name='rebuild_index'),
+     path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
