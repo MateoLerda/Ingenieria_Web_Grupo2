@@ -34,14 +34,14 @@ def event_list(request):
         if q:
             sqs = sqs.filter(content=AutoQuery(q))
         if city:
-            sqs = sqs.filter(content=city)
+            sqs = sqs.filter(city=city)
         if date_val:
             try:
                 parsed_date = date.fromisoformat(date_val)
             except ValueError:
                 parsed_date = None
             if parsed_date:
-                sqs = sqs.filter(content=parsed_date)
+                sqs = sqs.filter(date=parsed_date)
 
         ids = [int(r.pk) for r in sqs]
         if ids:
@@ -53,7 +53,7 @@ def event_list(request):
         if only_available:
             qs = qs.filter(available_tickets__gt=0)
     else:
-        qs = Event.objects.all().order_by('-date')
+        qs = Event.objects.filter(date__gte=date.today()).order_by('-date')
         if only_available:
             qs = qs.filter(available_tickets__gt=0)
 

@@ -1,4 +1,5 @@
 {{ object.name }}
+{{ object.date }}
 {{ object.description }}
 {{ object.city }}
 {{ object.state_province }}
