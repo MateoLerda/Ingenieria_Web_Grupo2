@@ -27,3 +27,22 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+
+.purchase-controls{
+  display: grid;
+  grid-template-columns: 1fr 220px 200px; 
+  gap: 12px;
+  align-items: end;
+}
+.purchase-controls .form-select,
+.purchase-controls .form-control{
+  height: 42px;
+}
+.purchase-controls .btn{
+  height: 42px;
+}
+@media (max-width: 992px){
+  .purchase-controls{ grid-template-columns: 1fr; }
+  .purchase-controls .btn{ width: 100%; }
+}

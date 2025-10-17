@@ -1,0 +1,62 @@
+{% extends 'events/base.html'%}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'events/css/create_event.css' %}">
+{% endblock %}
+{% block content %}
+
+<section class="create-event-hero">
+  <div>
+    <h2>Configure sectors for {{ event.name }}</h2>
+    <p>Define inventory and price for +18, +21, +30. You can adjust later.</p>
+  </div>
+</section>
+
+<div class="event-form">
+  <div class="form-header">
+    <div><strong>Sectors</strong></div>
+    <span class="badge-step">Step 2/3</span>
+  </div>
+  <div class="form-body">
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-grid">
+        <div class="col-12"><strong>+18</strong></div>
+        <div class="col-6">
+          <label class="form-label">Entradas disponibles</label>
+          <input class="form-control" type="number" name="inv_18" min="0" value="0" placeholder="Ej: 500" required>
+        </div>
+        <div class="col-6">
+          <label class="form-label">Precio</label>
+          <input class="form-control" type="number" name="price_18" step="0.01" min="0" value="0" placeholder="Ej: 20.00" required>
+        </div>
+
+        <div class="col-12 mt-3"><strong>+21</strong></div>
+        <div class="col-6">
+          <label class="form-label">Entradas disponibles</label>
+          <input class="form-control" type="number" name="inv_21" min="0" value="0" placeholder="Ej: 700" required>
+        </div>
+        <div class="col-6">
+          <label class="form-label">Precio</label>
+          <input class="form-control" type="number" name="price_21" step="0.01" min="0" value="0" placeholder="Ej: 25.00" required>
+        </div>
+
+        <div class="col-12 mt-3"><strong>+30</strong></div>
+        <div class="col-6">
+          <label class="form-label">Entradas disponibles</label>
+          <input class="form-control" type="number" name="inv_30" min="0" value="0" placeholder="Ej: 300" required>
+        </div>
+        <div class="col-6">
+          <label class="form-label">Precio</label>
+          <input class="form-control" type="number" name="price_30" step="0.01" min="0" value="0" placeholder="Ej: 30.00" required>
+        </div>
+      </div>
+      <div class="actions">
+        <a href="{% url 'events' %}" class="btn btn-outline-secondary">Cancelar</a>
+        <button class="btn btn-pf" type="submit">Next</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
