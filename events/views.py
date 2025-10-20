@@ -78,14 +78,23 @@ def event_list(request):
         },
     )
 
-@login_required
-def dashboard(request):
-    return render(request, 'events/dashboard.html')
-
 def event_detail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     sectors = event.sectors.all().order_by('sector_name')
-    return render(request, 'events/event_detail.html', {'event': event, 'sectors': sectors})
+    # Tickets already bought by the current user for this event (across all sectors)
+    if request.user.is_authenticated:
+        already_bought = (
+            Purchase.objects.filter(user=request.user, event_sector__event=event)
+            .aggregate(total=Sum('quantity'))
+            .get('total') or 0
+        )
+    else:
+        already_bought = 0
+    return render(request, 'events/event_detail.html', {
+        'event': event,
+        'sectors': sectors,
+        'already_bought': already_bought,
+    })
 
 @login_required
 def create_event(request):
@@ -132,7 +141,7 @@ def add_event_media(request, event_id):
     
 
 
-# Override manage_tickets with bulk edit version
+
 @login_required
 def manage_tickets(request, event_id):
     """Editar inventario y precio por sector en un solo formulario.
@@ -174,10 +183,11 @@ def manage_tickets(request, event_id):
                     total += new_inv
 
                 Event.objects.filter(pk=event.pk).update(available_tickets=total)
-            messages.success(request, 'Cambios guardados correctamente.')
+            messages.success(request, 'Changes saved successfully.')
         except Exception:
-            messages.error(request, 'No se pudieron guardar los cambios. Intentá nuevamente.')
-        return redirect('manage_tickets', event_id=event.id)
+            messages.error(request, 'Could not save changes. Please try again.')
+        # After saving, send user back to the event detail with a success message
+        return redirect('event_detail', event_id=event.id)
 
     return render(request, 'events/manage_tickets.html', { 'event': event, 'sectors': sectors })
 
@@ -193,12 +203,12 @@ def update_tickets(request, event_id):
         try:
             new_available = int(request.POST.get("available_tickets"))
             if new_available < 0:
-                raise ValueError("Cantidad inválida")
+                raise ValueError("Invalid quantity")
             event.available_tickets = new_available
             event.save()
             return redirect("event_detail", event_id=event.id)
         except (ValueError, TypeError):
-            # Si ponen algo inválido, vuelve al detalle
+            # If invalid data, go back to detail
             return redirect("event_detail", event_id=event.id)
 
     return render(request, "events/update_tickets.html", {"event": event})
@@ -217,16 +227,20 @@ def buy_tickets(request, event_id):
         sector_id = request.POST.get("sector_id")
 
         if not sector_id:
-            messages.error(request, "Debes seleccionar un sector.")
+            messages.error(request, "You must select a valid sector.")
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({ 'ok': False, 'error': "You must select a valid sector." }, status=400)
             return redirect("event_detail", event_id=event.id)
 
-        # Validaciones básicas
+        # Basic validations
         if quantity < 1 or quantity > event.max_tickets_per_user:
-            messages.error(request, f"Solo puedes comprar entre 1 y {event.max_tickets_per_user} entradas por compra.")
+            messages.error(request, f"You can only buy between 1 and {event.max_tickets_per_user} tickets per purchase.")
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({ 'ok': False, 'error': f"You can only buy between 1 and {event.max_tickets_per_user} tickets per purchase." }, status=400)
             return redirect("event_detail", event_id=event.id)
 
         with transaction.atomic():
-            # Bloqueo de fila de sector para evitar carrera
+            # Lock sector row to prevent race condition
             sector = get_object_or_404(EventSector.objects.select_for_update(), pk=sector_id, event=event)
 
             # Límite acumulado por usuario para el evento (en todos los sectores)
@@ -239,13 +253,19 @@ def buy_tickets(request, event_id):
             if already_bought + quantity > event.max_tickets_per_user:
                 remaining = max(event.max_tickets_per_user - already_bought, 0)
                 if remaining == 0:
-                    messages.error(request, "Ya alcanzaste el límite de entradas para este evento.")
+                    messages.error(request, "You have already reached the ticket limit for this event.")
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({ 'ok': False, 'error': "You have already reached the ticket limit for this event." }, status=400)
                 else:
-                    messages.error(request, f"Solo puedes comprar {remaining} entrada(s) adicionales para este evento.")
+                    messages.error(request, f"You can only buy {remaining} additional ticket(s) for this event.")
+                    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                        return JsonResponse({ 'ok': False, 'error': f"You can only buy {remaining} additional ticket(s) for this event." }, status=400)
                 return redirect("event_detail", event_id=event.id)
 
             if sector.sector_inventory < quantity:
-                messages.error(request, "No hay suficientes entradas disponibles en el sector seleccionado.")
+                messages.error(request, "There are not enough tickets available in the selected sector.")
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({ 'ok': False, 'error': "There are not enough tickets available in the selected sector." }, status=400)
                 return redirect("event_detail", event_id=event.id)
 
             # Descontar inventario de forma atómica
@@ -261,6 +281,8 @@ def buy_tickets(request, event_id):
                 total_price=total_price,
             )
 
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({ 'ok': True, 'redirect': "/purchase_success/" })
         return redirect("purchase_success")
 
     return redirect("event_detail", event_id=event.id)
@@ -269,7 +291,7 @@ def buy_tickets(request, event_id):
 @login_required
 def add_event_sectors(request, event_id):
     """Step 2: define default sectors and inventory/prices.
-    Creates sectors +18, +21, +30 and updates available_tickets as the sum.
+    Dynamic user-defined sectors; updates available_tickets as the sum.
     """
     event = get_object_or_404(Event, pk=event_id)
     if event.created_by != request.user:
@@ -279,29 +301,43 @@ def add_event_sectors(request, event_id):
         return render(request, 'events/create_event_sectors.html', { 'event': event })
 
     if request.method == 'POST':
-        try:
-            inv_18 = int(request.POST.get('inv_18', 0))
-            inv_21 = int(request.POST.get('inv_21', 0))
-            inv_30 = int(request.POST.get('inv_30', 0))
-            price_18 = Decimal(request.POST.get('price_18', '0') or '0')
-            price_21 = Decimal(request.POST.get('price_21', '0') or '0')
-            price_30 = Decimal(request.POST.get('price_30', '0') or '0')
-        except (TypeError, ValueError):
-            messages.error(request, 'Valores inválidos para sectores.')
+        # Expect multiple values for each field name
+        names = request.POST.getlist('sector_name')
+        invs = request.POST.getlist('sector_inventory')
+        prices = request.POST.getlist('sector_price')
+
+        if not names:
+            messages.error(request, 'Please add at least one sector.')
             return render(request, 'events/create_event_sectors.html', { 'event': event })
 
-        sectors_data = [
-            ('+18', inv_18, price_18),
-            ('+21', inv_21, price_21),
-            ('+30', inv_30, price_30),
-        ]
+        rows = []
+        for i in range(len(names)):
+            name = (names[i] or '').strip()
+            try:
+                inv = int((invs[i] if i < len(invs) else '0') or '0')
+            except (TypeError, ValueError):
+                inv = 0
+            try:
+                price = Decimal((prices[i] if i < len(prices) else '0') or '0')
+            except Exception:
+                price = Decimal('0')
+            if not name:
+                continue
+            if inv < 0:
+                inv = 0
+            if price < 0:
+                price = Decimal('0')
+            rows.append((name, inv, price))
+
+        if not rows:
+            messages.error(request, 'Please add valid sector data.')
+            return render(request, 'events/create_event_sectors.html', { 'event': event })
+
         total = 0
         with transaction.atomic():
-            # Eliminar sectores previos si se reconfigura
+            # Remove previous sectors if reconfiguring
             event.sectors.all().delete()
-            for name, inv, price in sectors_data:
-                inv = max(int(inv or 0), 0)
-                price = price if price >= 0 else Decimal('0')
+            for name, inv, price in rows:
                 total += inv
                 EventSector.objects.create(
                     event=event,
@@ -316,42 +352,18 @@ def add_event_sectors(request, event_id):
 
 
 @login_required
-def manage_tickets(request, event_id):
-    """Atomic add/remove inventory per sector to avoid race conditions."""
+def cancel_event_creation(request, event_id):
+    """Cancel Step 2: if the event has no sectors yet, discard it to avoid events without sectors."""
     event = get_object_or_404(Event, pk=event_id)
     if event.created_by != request.user:
-        return redirect("event_detail", event_id=event.id)
+        return redirect('events')
 
-    sectors = event.sectors.all().order_by('sector_name')
-    if request.method == 'POST':
-        sector_id = request.POST.get('sector_id')
-        action = request.POST.get('action')  # 'add' or 'remove'
-        try:
-            amount = int(request.POST.get('amount', 0))
-        except (TypeError, ValueError):
-            amount = 0
-
-        if not sector_id or amount <= 0 or action not in ('add', 'remove'):
-            messages.error(request, 'Datos inválidos.')
-            return redirect('manage_tickets', event_id=event.id)
-
-        with transaction.atomic():
-            sector = get_object_or_404(EventSector.objects.select_for_update(), pk=sector_id, event=event)
-            if action == 'remove':
-                # No permitir negativos
-                if sector.sector_inventory < amount:
-                    amount = sector.sector_inventory
-                delta = -amount
-            else:
-                delta = amount
-
-            EventSector.objects.filter(pk=sector.pk).update(sector_inventory=F('sector_inventory') + delta)
-            Event.objects.filter(pk=event.pk).update(available_tickets=F('available_tickets') + delta)
-
-        messages.success(request, 'Inventario actualizado correctamente.')
-        return redirect('manage_tickets', event_id=event.id)
-
-    return render(request, 'events/manage_tickets.html', { 'event': event, 'sectors': sectors })
+    if not event.sectors.exists():
+        event.delete()
+        messages.info(request, 'Event discarded because no sectors were defined.')
+    else:
+        messages.info(request, 'Event kept because it already has sectors defined.')
+    return redirect('events')
 
 
 

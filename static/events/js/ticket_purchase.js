@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const qtyInput = document.getElementById('quantity');
     const maxPerUser = Number(form.dataset.maxPerUser || 1);
-    const eventId = String(form.dataset.eventId || '');
+    const eventId = String(form.dataset.eventId || ''); // optional; not required for client checks
     const sectorSelect = document.getElementById('sector');
     const sectorPriceEl = document.getElementById('sectorPrice');
     const getAvailable = () => {
@@ -34,17 +34,10 @@ document.addEventListener('DOMContentLoaded', function () {
         opt.textContent = (opt.textContent || '').replace(/\(disp:[^)]+\)/i, `(disp: ${newValue})`);
     };
 
+    // Server is the source of truth; optionally the template can provide data-already-bought
     const getAlreadyBought = () => {
-        if (!eventId) return 0;
-        const k = `pf_evt_${eventId}_bought`;
-        const n = Number(window.localStorage.getItem(k));
+        const n = Number(form.dataset.alreadyBought || 0);
         return Number.isFinite(n) && n > 0 ? n : 0;
-    };
-    const addBought = (delta) => {
-        if (!eventId) return;
-        const k = `pf_evt_${eventId}_bought`;
-        const val = getAlreadyBought() + delta;
-        window.localStorage.setItem(k, String(val));
     };
     const redirectLogin = form.dataset.redirectLogin;
 
@@ -60,7 +53,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let submitting = false;
 
+    // Helper to show feedback messages in a Bootstrap modal
+    function showFeedback(message) {
+        const modalEl = document.getElementById('feedbackModal');
+        const bodyEl = document.getElementById('feedbackModalBody');
+        if (!modalEl || !bodyEl) { window.alert(message); return; }
+        bodyEl.textContent = message;
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl, { keyboard: true });
+        modal.show();
+    }
+
     form.addEventListener('submit', function (e) {
+        // If already confirmed, allow the browser to submit normally to server
+        if (form.dataset.confirmed === '1') {
+            return;
+        }
         e.preventDefault();
         if (submitting) return;
 
@@ -74,19 +81,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Validaciones en cliente (suaves; el servidor valida en forma definitiva)
         if (qty < 1) {
-            alert('Please select at least 1 ticket.');
+            showFeedback('Please select at least 1 ticket.');
             return;
         }
         // Límite por compra + acumulado (simulado por navegador)
         const already = getAlreadyBought();
-        const remaining = Math.max(maxPerUser - already, 0);
-        if (qty > remaining) {
-            alert('You cannot buy more than ' + remaining + ' tickets for this event with your account.');
+        const remaining = maxPerUser - already;
+        if (remaining == 0) {
+            showFeedback('You cannot buy more tickets for this event.')
             return;
         }
+
+        if (qty > remaining) {
+            showFeedback(`You have left only ${remaining} tickets to buy.`);
+            return;
+        }
+
         const avail = getAvailable();
         if (Number.isFinite(avail) && qty > avail) {
-            alert('Not enough tickets available.');
+            showFeedback('Not enough tickets available.');
             return;
         }
 
@@ -101,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!sectorSelect || !sectorPriceEl) return;
         const opt = sectorSelect.options[sectorSelect.selectedIndex];
         const price = opt ? opt.getAttribute('data-price') : null;
-        sectorPriceEl.textContent = price ? `Precio por entrada: $${price}` : '';
+        sectorPriceEl.textContent = price ? `Price by ticket: $${price}` : '';
     }
 
     if (sectorSelect) {
@@ -119,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
         refreshPriceHint();
     }
 
-    modalConfirmBtn.addEventListener('click', function () {
+        modalConfirmBtn.addEventListener('click', async function () {
         if (submitting) return;
         submitting = true;
         modalConfirmBtn.disabled = true;
@@ -129,33 +142,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const overlay = document.createElement('div');
         overlay.id = 'processingOverlay';
-        overlay.innerHTML = `
+                overlay.innerHTML = `
     <div class="processing-container">
       <div class="spinner-border text-primary" role="status"></div>
-      <p class="mt-3">Procesando compra...</p>
+            <p class="mt-3">Processing purchase...</p>
     </div>
   `;
         document.body.appendChild(overlay);
-
-        // Simular compra: actualizar inventario del sector y total, almacenar tickets "comprados"
-        const qty = parseInt(qtyInput.value, 10) || 0;
-        const availBefore = getAvailable();
-        const availAfter = Math.max(availBefore - qty, 0);
-        setAvailable(availAfter);
-        addBought(qty);
-
-        // Actualizar total de entradas visibles
-        const totalEl = document.getElementById('availableTickets');
-        if (totalEl) {
-            const totalVal = parseInt((totalEl.textContent || '0').replace(/[^0-9]/g, ''), 10) || 0;
-            const newTotal = Math.max(totalVal - qty, 0);
-            totalEl.textContent = String(newTotal);
-        }
-
-        // Redirigir a página de "éxito" simulada
-        setTimeout(() => {
-            window.location.href = '/purchase_success/';
-        }, 1500);
+                // Submit via fetch to avoid full page reload and capture messages
+                try {
+                    const formData = new FormData(form);
+                    const resp = await fetch(form.action, {
+                        method: 'POST',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        body: formData,
+                        credentials: 'same-origin'
+                    });
+                    const data = await resp.json();
+                    if (resp.ok && data && data.ok) {
+                        // Update UI counts (defensive, server remains source of truth)
+                        const qty = parseInt(qtyInput.value, 10) || 0;
+                        const availBefore = getAvailable();
+                        const availAfter = Math.max(availBefore - qty, 0);
+                        setAvailable(availAfter);
+                        const totalEl = document.getElementById('availableTickets');
+                        if (totalEl) {
+                            const totalVal = parseInt((totalEl.textContent || '0').replace(/[^0-9]/g, ''), 10) || 0;
+                            const newTotal = Math.max(totalVal - qty, 0);
+                            totalEl.textContent = String(newTotal);
+                        }
+                        window.location.href = data.redirect || '/purchase_success/';
+                    } else {
+                        const message = (data && data.error) ? data.error : 'Purchase failed. Please try again.';
+                        showFeedback(message);
+                    }
+                } catch (err) {
+                    showFeedback('Network error. Please try again.');
+                } finally {
+                    const overlayNow = document.getElementById('processingOverlay');
+                    if (overlayNow) overlayNow.remove();
+                    submitting = false;
+                    modalConfirmBtn.disabled = false;
+                    document.getElementById('buyBtn').disabled = false;
+                }
     });
 
     modalEl.addEventListener('hidden.bs.modal', function () {

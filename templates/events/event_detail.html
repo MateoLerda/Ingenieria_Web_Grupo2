@@ -1,6 +1,6 @@
 {% extends 'events/base.html' %}
 {% load static %}
-
+{% load group_tags %}
 {% block content %}
 <div>
   <a href="{% url 'events' %}" class="btn btn-outline-secondary mb-3">⟵ Go back</a>
@@ -42,7 +42,8 @@
         action="{% url 'buy_tickets' event.id %}"
         data-event-id="{{ event.id }}"
         data-max-per-user="{{ event.max_tickets_per_user }}"
-        data-available-tickets="{{ event.available_tickets }}"
+    data-available-tickets="{{ event.available_tickets }}"
+    data-already-bought="{{ already_bought|default:0 }}"
         {% if not user.is_authenticated %}data-redirect-login="{% url 'login' %}?next={{ request.get_full_path }}"{% endif %}>
       
       {% csrf_token %}
@@ -51,13 +52,13 @@
         <div>
           <label class="form-label">Sector</label>
           <select id="sector" name="sector_id" class="form-select" required>
-            <option value="" disabled selected>Selecciona un sector</option>
+            <option value="" disabled selected>Select a sector</option>
             {% with sector_list=sectors|default:event.sectors.all %}
               {% for s in sector_list %}
                 <option value="{{ s.id }}" 
                         data-available="{{ s.sector_inventory }}" 
                         data-price="{{ s.sector_price }}">
-                        {{ s.sector_name }} - ${{ s.sector_price }} (disp: {{ s.sector_inventory }})
+                        {{ s.sector_name }} - ${{ s.sector_price }} (available: {{ s.sector_inventory }})
                 </option>
               {% endfor %}
             {% endwith %}
@@ -66,26 +67,26 @@
         </div>
 
         <div>
-          <label class="form-label">Cantidad</label>
+     <label class="form-label">Quantity</label>
           <input type="number" id="quantity" name="quantity" min="1" 
                  max="{{ event.max_tickets_per_user }}" class="form-control" value="1" required>
-          <div class="form-text">Máximo {{ event.max_tickets_per_user }} por compra</div>
+     <div class="form-text">Maximum {{ event.max_tickets_per_user }} per purchase</div>
         </div>
 
         <div>
-          <button type="submit" id="buyBtn" class="btn btn-success w-100">Comprar</button>
+          <button type="submit" id="buyBtn" class="btn btn-success w-100">Buy</button>
         </div>
       </div>
   </form>
 
   <p class="mt-2">
-    <strong>Total entradas disponibles:</strong>
+    <strong>Total tickets available:</strong>
     <span id="availableTickets">{{ event.available_tickets }}</span>
   </p>
 
-  {% if user.is_authenticated and user == event.created_by %}
+  {% if user.is_authenticated and user == event.created_by and user|has_group:'Event_Organizer' %}
     <div class="mt-3">
-      <a href="{% url 'manage_tickets' event.id %}" class="btn btn-success">Gestionar entradas por sector</a>
+  <a href="{% url 'manage_tickets' event.id %}" class="btn btn-success">Manage tickets by sector</a>
     </div>
   {% endif %}
 </div>
@@ -95,16 +96,32 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="confirmPurchaseLabel">Confirmar compra</h5>
+        <h5 class="modal-title" id="confirmPurchaseLabel">Confirm purchase</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p id="confirmText">¿Estás seguro de que quieres comprar <span id="confirmQuantity"></span> entrada(s)?</p>
+        <p id="confirmText"><span id="confirmQuantity"></span></p>
         <p class="text-danger" id="confirmWarning"></p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-success" id="modalConfirm">Sí, comprar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, cancel</button>
+        <button type="button" class="btn btn-success" id="modalConfirm">Yes, buy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Feedback modal for error/info messages (used by JS) -->
+<div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="feedbackModalLabel">Notice</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="feedbackModalBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
       </div>
     </div>
   </div>

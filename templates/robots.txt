@@ -12,7 +12,6 @@ Disallow: /admin/
 Disallow: /accounts/logout/
 Disallow: /events/create/
 Disallow: /events/create/
-Disallow: /dashboard/
 Disallow: /media/
 Disallow: /static/
 

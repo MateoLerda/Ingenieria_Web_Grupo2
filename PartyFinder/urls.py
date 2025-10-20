@@ -26,11 +26,12 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('', event_views.home_view, name='home'),
     path('admin/', admin.site.urls),
+    path('about/', TemplateView.as_view(template_name='events/about.html'), name='about'),
     path('events/', event_views.event_list, name='events'),
     path('events/create/', event_views.create_event, name='create_event'),
     path('events/create/<event_id>/sectors/', event_views.add_event_sectors, name='add_event_sectors'),
+    path('events/create/<event_id>/cancel/', event_views.cancel_event_creation, name='cancel_event_creation'),
     path('events/create/<event_id>/media/', event_views.add_event_media, name='add_event_media'),
-    path('dashboard/', event_views.dashboard, name='dashboard'),
     path('accounts/signup/', user_views.signup_view, name='signup'),
     path('accounts/login/', user_views.login_view, name='login'),
     path('accounts/logout/', user_views.logout_view, name='logout'),

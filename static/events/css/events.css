@@ -34,6 +34,54 @@
   text-decoration: none;
 }
 
+/* Toggle button for Only available tickets */
+.toggle-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: #f1f1f6;
+  color: #22223B;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  padding: 8px 14px 8px 8px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.toggle-button .toggle-knob {
+  width: 34px;
+  height: 20px;
+  border-radius: 999px;
+  background: #bbb;
+  position: relative;
+  transition: background 0.2s ease;
+}
+.toggle-button .toggle-knob::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+.toggle-button.active {
+  background: #e9e7ff;
+  border-color: #4A4E69;
+  box-shadow: 0 0 0 3px rgba(74, 78, 105, 0.15);
+}
+.toggle-button.active .toggle-knob {
+  background: #4A4E69;
+}
+.toggle-button.active .toggle-knob::after {
+  transform: translateX(14px);
+}
+.toggle-button .toggle-label {
+  font-weight: 600;
+}
+
 .party-card {
   border: none;
   border-radius: 15px;

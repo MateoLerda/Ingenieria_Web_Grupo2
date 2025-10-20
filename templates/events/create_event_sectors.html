@@ -8,8 +8,10 @@
 <section class="create-event-hero">
   <div>
     <h2>Configure sectors for {{ event.name }}</h2>
-    <p>Define inventory and price for +18, +21, +30. You can adjust later.</p>
+    <p>Add one or more sectors with their inventory and price. You can adjust later.</p>
   </div>
+  <div></div>
+  
 </section>
 
 <div class="event-form">
@@ -20,43 +22,99 @@
   <div class="form-body">
     <form method="post">
       {% csrf_token %}
-      <div class="form-grid">
-        <div class="col-12"><strong>+18</strong></div>
-        <div class="col-6">
-          <label class="form-label">Entradas disponibles</label>
-          <input class="form-control" type="number" name="inv_18" min="0" value="0" placeholder="Ej: 500" required>
-        </div>
-        <div class="col-6">
-          <label class="form-label">Precio</label>
-          <input class="form-control" type="number" name="price_18" step="0.01" min="0" value="0" placeholder="Ej: 20.00" required>
-        </div>
 
-        <div class="col-12 mt-3"><strong>+21</strong></div>
-        <div class="col-6">
-          <label class="form-label">Entradas disponibles</label>
-          <input class="form-control" type="number" name="inv_21" min="0" value="0" placeholder="Ej: 700" required>
-        </div>
-        <div class="col-6">
-          <label class="form-label">Precio</label>
-          <input class="form-control" type="number" name="price_21" step="0.01" min="0" value="0" placeholder="Ej: 25.00" required>
-        </div>
+      {# Show server-side messages #}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags|default:'info' }}" role="alert">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
 
-        <div class="col-12 mt-3"><strong>+30</strong></div>
-        <div class="col-6">
-          <label class="form-label">Entradas disponibles</label>
-          <input class="form-control" type="number" name="inv_30" min="0" value="0" placeholder="Ej: 300" required>
-        </div>
-        <div class="col-6">
-          <label class="form-label">Precio</label>
-          <input class="form-control" type="number" name="price_30" step="0.01" min="0" value="0" placeholder="Ej: 30.00" required>
-        </div>
+      {# Client-side alert when attempting to proceed without sectors #}
+      <div id="sectorError" class="alert alert-danger d-none" role="alert">
+        You cannot create an event without sectors.
       </div>
+
+      <div class="table-responsive">
+        <table class="table align-middle" id="sectorsTable">
+          <thead>
+            <tr>
+              <th style="width: 40%">Name</th>
+              <th style="width: 25%">Available tickets</th>
+              <th style="width: 25%">Price</th>
+              <th style="width: 10%" class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="sectorsBody">
+            {% if event.sectors.all %}
+              {% for s in event.sectors.all %}
+                <tr>
+                  <td>
+                    <input class="form-control" name="sector_name" value="{{ s.sector_name }}" placeholder="e.g. VIP" required>
+                  </td>
+                  <td>
+                    <input class="form-control" type="number" name="sector_inventory" min="0" value="{{ s.sector_inventory }}" placeholder="e.g. 100" required>
+                  </td>
+                  <td>
+                    <input class="form-control" type="number" name="sector_price" step="0.01" min="0" value="{{ s.sector_price }}" placeholder="e.g. 25.00" required>
+                  </td>
+                  <td class="text-end">
+                    <button type="button" class="btn btn-outline-danger btn-sm remove-sector">Remove</button>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td>
+                    <input class="form-control" name="sector_name" placeholder="e.g. VIP" required>
+                  </td>
+                  <td>
+                    <input class="form-control" type="number" name="sector_inventory" min="0" value="0" placeholder="e.g. 100" required>
+                  </td>
+                  <td>
+                    <input class="form-control" type="number" name="sector_price" step="0.01" min="0" value="0" placeholder="e.g. 25.00" required>
+                  </td>
+                  <td class="text-end">
+                    <button type="button" class="btn btn-outline-danger btn-sm remove-sector">Remove</button>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="d-flex justify-content-between mb-3">
+        <button type="button" id="addSectorBtn" class="btn btn-outline-primary">Add sector</button>
+        <div class="text-muted">Tip: Set ticket inventory and price for each sector.</div>
+      </div>
+
       <div class="actions">
-        <a href="{% url 'events' %}" class="btn btn-outline-secondary">Cancelar</a>
+        <a href="{% url 'cancel_event_creation' event.id %}" class="btn btn-outline-secondary">Cancel</a>
         <button class="btn btn-pf" type="submit">Next</button>
       </div>
+
+      <!-- Template row for JS cloning -->
+      <template id="sectorRowTemplate">
+        <tr>
+          <td>
+            <input class="form-control" name="sector_name" placeholder="e.g. VIP" required>
+          </td>
+          <td>
+            <input class="form-control" type="number" name="sector_inventory" min="0" value="0" placeholder="e.g. 100" required>
+          </td>
+          <td>
+            <input class="form-control" type="number" name="sector_price" step="0.01" min="0" value="0" placeholder="e.g. 25.00" required>
+          </td>
+          <td class="text-end">
+            <button type="button" class="btn btn-outline-danger btn-sm remove-sector">Remove</button>
+          </td>
+        </tr>
+      </template>
     </form>
   </div>
 </div>
 
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'events/js/create_event_sectors.js' %}"></script>
 {% endblock %}

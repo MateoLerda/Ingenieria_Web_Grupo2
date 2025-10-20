@@ -25,12 +25,12 @@
     </datalist>
   </div>
 
-  <div class="form-check">
-    <input type="checkbox" name="only_available" value="1"
-           class="form-check-input" id="onlyAvailableCheck"
-           {% if only_available %}checked{% endif %}>
-    <label class="form-check-label" for="onlyAvailableCheck">
-      Only available tickets
+  <div class="col-12 col-md-6 d-flex align-items-center">
+    <input type="checkbox" name="only_available" value="1" id="onlyAvailableCheck" 
+           {% if only_available %}checked{% endif %} style="display: none;">
+    <label class="toggle-button {% if only_available %}active{% endif %}" for="onlyAvailableCheck" id="toggleLabel">
+      <span class="toggle-knob"></span>
+      <span class="toggle-label">Only available tickets</span>
     </label>
   </div>
 
