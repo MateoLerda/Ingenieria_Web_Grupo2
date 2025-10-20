@@ -1,79 +1,96 @@
 {% extends 'events/base.html' %}
 {% load static %}
+
 {% block content %}
 <div>
-    <a href="{% url 'events' %}" class="btn btn-outline-secondary mb-3">⟵ Go back</a>
+  <a href="{% url 'events' %}" class="btn btn-outline-secondary mb-3">⟵ Go back</a>
 
-    <h2>{{ event.name }}</h2>
-    <p><strong>Place:</strong> {{ event.city }}, {{ event.country }}</p>
-    <p><strong>Date:</strong> {{ event.date }}</p>
-    <p><strong>Description:</strong> {{ event.description }}</p>
+  <h2>{{ event.name }}</h2>
+  <p><strong>Place:</strong> {{ event.city }}, {{ event.country }}</p>
+  <p><strong>Date:</strong> {{ event.date }}</p>
+  <p><strong>Description:</strong> {{ event.description }}</p>
 
-    {% if event.flyer %}
-      <div class="mb-3">
-        <img src="{{ event.flyer.url }}" alt="Flyer of {{ event.name }}" class="img-fluid">
-      </div>
-    {% endif %}
-
-    <div class="gallery">
-      {% for image in event.images.all %}
-        {% if image.image_url %}
-          <div class="gallery-item">
-            <img src="{{ image.image_url.url }}" alt="Image of {{ event.name }}">
-          </div>
-        {% endif %}
-      {% endfor %}
-
-      {% for video in event.videos.all %}
-        {% if video.video_url %}
-          <div class="gallery-item">
-            <video controls>
-              <source src="{{ video.video_url.url }}" type="video/mp4">
-            </video>
-          </div>
-        {% endif %}
-      {% endfor %}
+  {% if event.flyer %}
+    <div class="mb-3">
+      <img src="{{ event.flyer.url }}" alt="Flyer of {{ event.name }}" class="img-fluid">
     </div>
+  {% endif %}
 
-    <!-- Purchase form with sector selection -->
-    <form id="purchaseForm" method="post" action="{% url 'buy_tickets' event.id %}"
-      data-max-per-user="{{ event.max_tickets_per_user }}" data-event-id="{{ event.id }}"
-      {% if not user.is_authenticated %}data-redirect-login="{% url 'login' %}?next={{ request.get_full_path }}"{% endif %}>
-        {% csrf_token %}
-        <div class="purchase-controls">
-          <div>
-            <label class="form-label">Sector</label>
-            <select id="sector" name="sector_id" class="form-select" required>
-              <option value="" disabled selected>Selecciona un sector</option>
-              {% with sector_list=sectors|default:event.sectors.all %}
-                {% for s in sector_list %}
-                  <option value="{{ s.id }}" data-available="{{ s.sector_inventory }}" data-price="{{ s.sector_price }}">{{ s.sector_name }} - ${{ s.sector_price }} (disp: {{ s.sector_inventory }})</option>
-                {% endfor %}
-              {% endwith %}
-            </select>
-            <div id="sectorPrice" class="form-text"></div>
-          </div>
-          <div>
-            <label class="form-label">Cantidad</label>
-            <input type="number" id="quantity" name="quantity" min="1" max="{{ event.max_tickets_per_user }}" class="form-control" value="1" required>
-            <div class="form-text">Máximo {{ event.max_tickets_per_user }} por compra</div>
-          </div>
-          <div>
-            <button type="submit" id="buyBtn" class="btn btn-success w-100">Comprar</button>
-          </div>
+  <div class="gallery">
+    {% for image in event.images.all %}
+      {% if image.image_url %}
+        <div class="gallery-item">
+          <img src="{{ image.image_url.url }}" alt="Image of {{ event.name }}">
         </div>
-    </form>
+      {% endif %}
+    {% endfor %}
 
-    <p class="mt-2"><strong>Total entradas disponibles:</strong> <span id="availableTickets">{{ event.available_tickets }}</span></p>
+    {% for video in event.videos.all %}
+      {% if video.video_url %}
+        <div class="gallery-item">
+          <video controls>
+            <source src="{{ video.video_url.url }}" type="video/mp4">
+          </video>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
 
-    {% if user.is_authenticated and user == event.created_by %}
-      <div class="mt-3">
-        <a href="{% url 'manage_tickets' event.id %}" class="btn btn-success">Gestionar entradas por sector</a>
+  <!-- FORMULARIO DE COMPRA -->
+  <form id="purchaseForm" 
+        method="post" 
+        action="{% url 'buy_tickets' event.id %}"
+        data-event-id="{{ event.id }}"
+        data-max-per-user="{{ event.max_tickets_per_user }}"
+        data-available-tickets="{{ event.available_tickets }}"
+        {% if not user.is_authenticated %}data-redirect-login="{% url 'login' %}?next={{ request.get_full_path }}"{% endif %}>
+      
+      {% csrf_token %}
+
+      <div class="purchase-controls">
+        <div>
+          <label class="form-label">Sector</label>
+          <select id="sector" name="sector_id" class="form-select" required>
+            <option value="" disabled selected>Selecciona un sector</option>
+            {% with sector_list=sectors|default:event.sectors.all %}
+              {% for s in sector_list %}
+                <option value="{{ s.id }}" 
+                        data-available="{{ s.sector_inventory }}" 
+                        data-price="{{ s.sector_price }}">
+                        {{ s.sector_name }} - ${{ s.sector_price }} (disp: {{ s.sector_inventory }})
+                </option>
+              {% endfor %}
+            {% endwith %}
+          </select>
+          <div id="sectorPrice" class="form-text"></div>
+        </div>
+
+        <div>
+          <label class="form-label">Cantidad</label>
+          <input type="number" id="quantity" name="quantity" min="1" 
+                 max="{{ event.max_tickets_per_user }}" class="form-control" value="1" required>
+          <div class="form-text">Máximo {{ event.max_tickets_per_user }} por compra</div>
+        </div>
+
+        <div>
+          <button type="submit" id="buyBtn" class="btn btn-success w-100">Comprar</button>
+        </div>
       </div>
-    {% endif %}
+  </form>
+
+  <p class="mt-2">
+    <strong>Total entradas disponibles:</strong>
+    <span id="availableTickets">{{ event.available_tickets }}</span>
+  </p>
+
+  {% if user.is_authenticated and user == event.created_by %}
+    <div class="mt-3">
+      <a href="{% url 'manage_tickets' event.id %}" class="btn btn-success">Gestionar entradas por sector</a>
+    </div>
+  {% endif %}
 </div>
 
-<!-- Confirm modal (kept) -->
+<!-- MODAL DE CONFIRMACIÓN -->
 <div class="modal fade" id="confirmPurchaseModal" tabindex="-1" aria-labelledby="confirmPurchaseLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -92,12 +109,12 @@
     </div>
   </div>
 </div>
-
 {% endblock %}
 
 {% block scripts %}
 <script src="{% static 'events/js/ticket_purchase.js' %}"></script>
 {% endblock %}
+
 {% block styles %}
 <link rel="stylesheet" href="{% static 'events/css/ticket_purchase.css' %}">
 <link rel="stylesheet" href="{% static 'events/css/gallery.css' %}">
