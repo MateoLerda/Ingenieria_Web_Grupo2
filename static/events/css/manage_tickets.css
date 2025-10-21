@@ -1,0 +1,324 @@
+/* Manage Tickets - Sectors, Entries and Prices Styles */
+
+.manage-tickets-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.manage-tickets-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #22223B;
+  margin-bottom: 30px;
+  text-align: center;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.manage-tickets-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(90deg, #4A5FE0 0%, #9C6FE4 100%);
+  border-radius: 2px;
+}
+
+.tickets-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.tickets-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tickets-table thead {
+  background: linear-gradient(135deg, #22223B 0%, #3a3a5c 100%);
+}
+
+.tickets-table thead th {
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 18px 15px;
+  text-align: left;
+  border: none;
+}
+
+.tickets-table tbody tr {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.tickets-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.tickets-table tbody tr:hover {
+  background-color: #f8f9ff;
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(74, 95, 224, 0.1);
+}
+
+.tickets-table tbody td {
+  padding: 20px 15px;
+  vertical-align: middle;
+}
+
+.sector-name {
+  font-weight: 600;
+  color: #22223B;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sector-name::before {
+  content: '🎫';
+  font-size: 1.2rem;
+}
+
+.tickets-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e0e5f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #f8f9ff;
+}
+
+.tickets-input:focus {
+  outline: none;
+  border-color: #4A5FE0;
+  background-color: white;
+  box-shadow: 0 0 0 4px rgba(74, 95, 224, 0.1);
+}
+
+.tickets-input:hover {
+  border-color: #9C6FE4;
+}
+
+.price-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e0e5f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #f8f9ff;
+  position: relative;
+}
+
+.price-input:focus {
+  outline: none;
+  border-color: #4A5FE0;
+  background-color: white;
+  box-shadow: 0 0 0 4px rgba(74, 95, 224, 0.1);
+}
+
+.price-input:hover {
+  border-color: #9C6FE4;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.empty-state::before {
+  content: '📋';
+  display: block;
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.btn-save {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-save:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+  background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+}
+
+.btn-save:active {
+  transform: translateY(-1px);
+}
+
+.btn-back {
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-back:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+  background: linear-gradient(135deg, #5a6268 0%, #6c757d 100%);
+  color: white;
+  text-decoration: none;
+}
+
+.btn-back:active {
+  transform: translateY(-1px);
+}
+
+/* Update Tickets Simple Form Styles */
+.update-tickets-form {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 40px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.update-tickets-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #22223B;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.form-group-tickets {
+  margin-bottom: 25px;
+}
+
+.form-label-tickets {
+  display: block;
+  font-weight: 600;
+  color: #22223B;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.form-input-tickets {
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid #e0e5f0;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  background-color: #f8f9ff;
+}
+
+.form-input-tickets:focus {
+  outline: none;
+  border-color: #4A5FE0;
+  background-color: white;
+  box-shadow: 0 0 0 4px rgba(74, 95, 224, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .manage-tickets-container {
+    padding: 20px;
+    margin: 20px auto;
+  }
+
+  .manage-tickets-title {
+    font-size: 1.5rem;
+  }
+
+  .tickets-table thead th {
+    font-size: 0.85rem;
+    padding: 12px 10px;
+  }
+
+  .tickets-table tbody td {
+    padding: 15px 10px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .btn-save,
+  .btn-back {
+    width: 100%;
+  }
+
+  .sector-name {
+    font-size: 0.95rem;
+  }
+
+  .tickets-input,
+  .price-input {
+    padding: 10px 12px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .manage-tickets-title {
+    font-size: 1.3rem;
+  }
+
+  .tickets-table thead th {
+    font-size: 0.75rem;
+    padding: 10px 8px;
+  }
+
+  .tickets-table tbody td {
+    padding: 12px 8px;
+  }
+
+  .btn-save,
+  .btn-back {
+    padding: 12px 30px;
+    font-size: 0.9rem;
+  }
+}

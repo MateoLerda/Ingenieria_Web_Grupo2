@@ -1,14 +1,25 @@
 {% extends 'events/base.html' %}
-{% block content %}
-<h2>Edit tickets for {{ event.name }}</h2>
+{% load static %}
 
-<form method="post">
-  {% csrf_token %}
-  <div class="mb-3">
-  <label class="form-label">Available tickets</label>
-    <input type="number" name="available_tickets" value="{{ event.available_tickets }}" min="0" class="form-control" required>
-  </div>
-  <button type="submit" class="btn btn-success">Save changes</button>
-  <a href="{% url 'event_detail' event.id %}" class="btn btn-secondary">Cancel</a>
-</form>
+{% block styles %}
+<link rel="stylesheet" href="{% static 'events/css/manage_tickets.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="update-tickets-form">
+  <h2 class="update-tickets-title">Edit tickets for {{ event.name }}</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-group-tickets">
+      <label class="form-label-tickets">Available tickets</label>
+      <input type="number" name="available_tickets" value="{{ event.available_tickets }}" min="0" class="form-input-tickets" required placeholder="Enter number of available tickets">
+    </div>
+    
+    <div class="action-buttons">
+      <a href="{% url 'event_detail' event.id %}" class="btn-back">Cancel</a>
+      <button type="submit" class="btn-save">Save changes</button>
+    </div>
+  </form>
+</div>
 {% endblock %}
