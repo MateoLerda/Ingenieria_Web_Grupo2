@@ -1,37 +1,117 @@
 /* ==========================
-   CARDS DE FIESTAS
+   EVENTS PAGE STYLES
    ========================== */
 
+/* Page Title */
+.events-title {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, #4A4E69 0%, #22223B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.events-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(90deg, #4A4E69, #7209B7);
+  border-radius: 2px;
+}
+
+/* Filter Form Container */
+#filtersForm {
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  margin-bottom: 3rem;
+  border: 1px solid rgba(74, 78, 105, 0.1);
+}
+
+/* Form Controls */
+#filtersForm .form-control {
+  border-radius: 12px;
+  border: 2px solid #e0e0e0;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #f8f9fa;
+}
+
+#filtersForm .form-control:focus {
+  border-color: #4A4E69;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(74, 78, 105, 0.1);
+  outline: none;
+}
+
+#filtersForm .form-control::placeholder {
+  color: #adb5bd;
+  font-weight: 400;
+}
+
+/* Filter Buttons */
 .filter-button {
-  background-color: #4A4E69;
+  background: linear-gradient(135deg, #4A4E69 0%, #22223B 100%);
   border: none;
-  padding: 15px 20px;
+  padding: 0.875rem 2.5rem;
   color: white;
-  font-weight: 500;
-  font-size: 16px;
-  transition: .3s ease;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(74, 78, 105, 0.3);
+  text-transform: uppercase;
 }
 
 .filter-button:hover {
-  background-color: #22223B;
-  color: #FFFFFF;
+  background: linear-gradient(135deg, #22223B 0%, #4A4E69 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(74, 78, 105, 0.4);
+}
+
+.filter-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(74, 78, 105, 0.3);
 }
 
 .clear-button {
-  background-color: #8e9aaf;
-  color: #FFFFFF;
-  padding: 15px 20px;
-  font-weight: 500;
-  font-size: 16px;
-  transition: .3s ease;
-  border: solid 1px #8e9aaf;
+  background-color: white;
+  color: #4A4E69;
+  padding: 0.875rem 2.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  border: 2px solid #4A4E69;
   text-decoration: none;
+  display: inline-block;
+  text-transform: uppercase;
 }
 
 .clear-button:hover {
-  background-color: #22223B;
+  background-color: #4A4E69;
   color: #FFFFFF;
   text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(74, 78, 105, 0.2);
+}
+
+.clear-button:active {
+  transform: translateY(0);
 }
 
 /* Toggle button for Only available tickets */
@@ -82,107 +162,348 @@
   font-weight: 600;
 }
 
+/* ==========================
+   EVENT CARDS
+   ========================== */
+
 .party-card {
   border: none;
-  border-radius: 15px;
+  border-radius: 20px;
   overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  background: white;
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.party-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(74, 78, 105, 0.05) 0%, rgba(34, 34, 59, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.party-card:hover::before {
+  opacity: 1;
 }
 
 .party-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 25px rgba(124,58,237,0.25);
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(74, 78, 105, 0.2);
 }
 
 .party-card .card-img-top {
   height: 280px;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s ease;
+  position: relative;
 }
 
 .party-card:hover .card-img-top {
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 .party-card .card-body {
   background: white;
-  padding: 1.2rem;
+  padding: 1.75rem 1.5rem;
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
+/* Event Card Title */
 .event-card-title {
-  text-transform: uppercase;
+  font-size: 1.5rem;
   font-weight: 800;
-  letter-spacing: 1px; 
-  font-size: 2.5rem;
-  font-family: "Inter", sans-serif;
+  letter-spacing: 1.5px;
+  color: #22223B;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+  transition: color 0.3s ease;
 }
 
-.party-card .text-muted { text-align: center; }
-
-.btn-pf {
-  background: #22223B;
-  color: #FFFFFF;
-  border: 2px solid #22223B;
-  padding: 10px 16px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-decoration: none;
-  text-transform: uppercase;
-  transition: all 0.25s ease;
-}
-.btn-pf:hover {
-  background: #4A4E69;
-  border-color: #4A4E69;
-  color: #FFFFFF;
-  transform: translateY(-1px);
+.party-card:hover .event-card-title {
+  color: #4A4E69;
 }
 
-
-/* ==========================
-   FORMULARIOS Y BOTONES
-   ========================== */
-form .form-control {
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  transition: all 0.25s ease;
-}
-
-form .form-control:focus {
-  box-shadow: 0 0 0 3px rgba(124,58,237,0.2);
-}
-
-/* ==========================
-   CARD SECTION DIVIDERS
-   ========================== */
-.card-section-title{
+/* Card Sections */
+.card-section-title {
   width: 100%;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
 }
 
-.card-section-meta{
+.card-section-meta {
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px 0;
-  border-top: 1px solid rgba(0,0,0,0.08);
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+  justify-content: space-around;
+  gap: 1rem;
+  padding: 1rem 0;
+  margin: 1rem 0;
+  border-top: 2px solid rgba(74, 78, 105, 0.1);
+  border-bottom: 2px solid rgba(74, 78, 105, 0.1);
+  flex: 0 0 auto;
 }
-.card-section-meta .meta-item{
+
+.card-section-meta .meta-item {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #6c757d;
+  transition: color 0.3s ease;
 }
-.icon{ display:inline-block; vertical-align: middle; }
-.icon-location{ width: 16px; height: 16px; }
 
-.card-section-actions{
-  width: 100%;
-  padding-top: 10px;
-  margin-top: 10px;
+.party-card:hover .card-section-meta .meta-item {
+  color: #4A4E69;
 }
+
+.icon {
+  display: inline-block;
+  vertical-align: middle;
+  filter: grayscale(0.2);
+  transition: all 0.3s ease;
+}
+
+.party-card:hover .icon {
+  filter: grayscale(0);
+  transform: scale(1.1);
+}
+
+.icon-location,
+.icon-calendar {
+  width: 18px;
+  height: 18px;
+}
+
+.card-section-actions {
+  width: 100%;
+  padding-top: 1rem;
+  margin-top: auto;
+}
+
+/* View Details Button */
+.btn-pf {
+  background: linear-gradient(135deg, #4A4E69 0%, #22223B 100%);
+  color: #FFFFFF;
+  border: none;
+  padding: 0.875rem 2rem;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  border-radius: 10px;
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(74, 78, 105, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-pf::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-pf:hover::before {
+  left: 100%;
+}
+
+.btn-pf:hover {
+  background: linear-gradient(135deg, #22223B 0%, #4A4E69 100%);
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(74, 78, 105, 0.3);
+}
+
+.btn-pf:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(74, 78, 105, 0.2);
+}
+
+/* Empty State */
+.alert-info {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border: none;
+  border-radius: 15px;
+  padding: 2rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #1976d2;
+  box-shadow: 0 4px 15px rgba(25, 118, 210, 0.1);
+}
+
+/* ==========================
+   PAGINATION STYLES
+   ========================== */
+
+.pagination {
+  gap: 0.5rem;
+  margin-top: 3rem;
+}
+
+.pagination .page-item {
+  margin: 0;
+}
+
+.pagination .page-link {
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 0.75rem 1.25rem;
+  color: #4A4E69;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  background: white;
+  margin: 0 0.25rem;
+}
+
+.pagination .page-link:hover {
+  background: #4A4E69;
+  border-color: #4A4E69;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(74, 78, 105, 0.2);
+}
+
+.pagination .page-item.disabled .page-link {
+  background: #f8f9fa;
+  border-color: #e0e0e0;
+  color: #6c757d;
+  font-weight: 500;
+  cursor: default;
+}
+
+.pagination .page-item.disabled .page-link:hover {
+  transform: none;
+  box-shadow: none;
+  background: #f8f9fa;
+}
+
+/* ==========================
+   RESPONSIVE DESIGN
+   ========================== */
+
+@media (max-width: 768px) {
+  .events-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .events-title::after {
+    width: 60px;
+    height: 3px;
+  }
+
+  #filtersForm {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  #filtersForm .form-control {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .filter-button,
+  .clear-button {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  .party-card .card-img-top {
+    height: 220px;
+  }
+
+  .event-card-title {
+    font-size: 1.25rem;
+  }
+
+  .card-section-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .btn-pf {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .pagination .page-link {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .events-title {
+    font-size: 1.75rem;
+  }
+
+  #filtersForm {
+    padding: 1rem;
+  }
+
+  .party-card .card-img-top {
+    height: 200px;
+  }
+
+  .toggle-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ==========================
+   ANIMATIONS & TRANSITIONS
+   ========================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.party-card {
+  animation: fadeInUp 0.5s ease-out;
+  animation-fill-mode: both;
+}
+
+/* Staggered animation for cards */
+.party-card:nth-child(1) { animation-delay: 0.1s; }
+.party-card:nth-child(2) { animation-delay: 0.2s; }
+.party-card:nth-child(3) { animation-delay: 0.3s; }
+.party-card:nth-child(4) { animation-delay: 0.4s; }
+.party-card:nth-child(5) { animation-delay: 0.5s; }
+.party-card:nth-child(6) { animation-delay: 0.6s; }
+.party-card:nth-child(n+7) { animation-delay: 0.7s; }
+
 

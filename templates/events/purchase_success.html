@@ -1,10 +1,92 @@
 {% extends "events/base.html" %}
 {% load static %}
 
+{% block styles %}
+<link rel="stylesheet" href="{% static 'events/css/purchase_success.css' %}">
+{% endblock %}
+
+{% block title %}Purchase Successful | PartyFinder{% endblock %}
+
 {% block content %}
-<div class="text-center mt-5">
-  <h2 class="text-success">🎉 Compra realizada con éxito!</h2>
-  <strong>Serás redirigido a la página principal en unos segundos...</strong>
+<div class="success-container">
+  <div class="success-card">
+    <!-- Checkmark animado -->
+    <div class="success-icon-wrapper">
+      <div class="success-icon">
+        <div class="success-icon-circle">
+          <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+            <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+            <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Título principal -->
+    <h1 class="success-title">Purchase Successful!</h1>
+    
+    <!-- Mensaje de confirmación -->
+    <p class="success-message">
+      Your tickets have been successfully purchased. You will receive a confirmation email shortly.
+    </p>
+
+    <!-- Iconos de información -->
+    <div class="success-info">
+      <div class="info-item">
+        <div class="info-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </div>
+        <div class="info-text">
+          <h3>Email Sent</h3>
+          <p>Check your inbox for confirmation</p>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+        </div>
+        <div class="info-text">
+          <h3>Digital Tickets</h3>
+          <p>Your tickets are ready to use</p>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <div class="info-text">
+          <h3>Confirmed</h3>
+          <p>Your reservation is guaranteed</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contador de redirección -->
+    <div class="redirect-info">
+      <div class="spinner"></div>
+      <p>Redirecting to home in <span id="countdown">5</span> seconds...</p>
+    </div>
+
+    <!-- Botón alternativo -->
+    <div class="success-actions">
+      <a href="/" class="btn-home">Go to Home Now</a>
+      <a href="/events" class="btn-events">Browse More Events</a>
+    </div>
+  </div>
+
+  <!-- Efecto de confetti/celebración -->
+  <div class="confetti-container" id="confetti"></div>
 </div>
 
 {% block scripts %}

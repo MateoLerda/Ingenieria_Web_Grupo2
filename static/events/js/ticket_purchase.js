@@ -8,6 +8,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const eventId = String(form.dataset.eventId || ''); // optional; not required for client checks
     const sectorSelect = document.getElementById('sector');
     const sectorPriceEl = document.getElementById('sectorPrice');
+    const subtotalEl = document.getElementById('subtotal');
+    const totalEl = document.getElementById('total');
+    const decreaseBtn = document.getElementById('decreaseQty');
+    const increaseBtn = document.getElementById('increaseQty');
+
     const getAvailable = () => {
         if (!sectorSelect) return Number.MAX_SAFE_INTEGER;
         let opt = sectorSelect.options[sectorSelect.selectedIndex];
@@ -15,8 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const val = opt.getAttribute('data-available');
         const n = Number(val);
         if (!Number.isNaN(n) && n >= 0) return n;
-        // Fallback: try to read from visible text "(disp: N)"
-        const m = (opt.textContent || '').match(/disp:\s*(\d+)/i);
+        const m = (opt.textContent || '').match(/(\d+)\s+available/i);
         if (m) {
             const parsed = Number(m[1]);
             if (!Number.isNaN(parsed)) return parsed;
@@ -30,9 +34,53 @@ document.addEventListener('DOMContentLoaded', function () {
         const opt = sectorSelect.options[sectorSelect.selectedIndex];
         if (!opt) return;
         opt.setAttribute('data-available', String(newValue));
-        // also update visible label "(disp: N)"
-        opt.textContent = (opt.textContent || '').replace(/\(disp:[^)]+\)/i, `(disp: ${newValue})`);
+        // also update visible label
+        opt.textContent = opt.textContent.replace(/\d+\s+available/i, `${newValue} available`);
     };
+
+    const getCurrentPrice = () => {
+        if (!sectorSelect) return 0;
+        const opt = sectorSelect.options[sectorSelect.selectedIndex];
+        if (!opt) return 0;
+        const price = opt.getAttribute('data-price');
+        return Number(price) || 0;
+    };
+
+    const updateTotals = () => {
+        const qty = parseInt(qtyInput.value, 10) || 0;
+        const price = getCurrentPrice();
+        const total = qty * price;
+        
+        if (subtotalEl) subtotalEl.textContent = `$${total.toFixed(2)}`;
+        if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
+    };
+
+    // Quantity buttons
+    if (decreaseBtn) {
+        decreaseBtn.addEventListener('click', function() {
+            const currentQty = parseInt(qtyInput.value, 10) || 1;
+            if (currentQty > 1) {
+                qtyInput.value = currentQty - 1;
+                updateTotals();
+            }
+        });
+    }
+
+    if (increaseBtn) {
+        increaseBtn.addEventListener('click', function() {
+            const currentQty = parseInt(qtyInput.value, 10) || 1;
+            const max = Math.min(maxPerUser, getAvailable());
+            if (currentQty < max) {
+                qtyInput.value = currentQty + 1;
+                updateTotals();
+            }
+        });
+    }
+
+    // Update totals when quantity changes
+    if (qtyInput) {
+        qtyInput.addEventListener('input', updateTotals);
+    }
 
     // Server is the source of truth; optionally the template can provide data-already-bought
     const getAlreadyBought = () => {
@@ -114,7 +162,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!sectorSelect || !sectorPriceEl) return;
         const opt = sectorSelect.options[sectorSelect.selectedIndex];
         const price = opt ? opt.getAttribute('data-price') : null;
-        sectorPriceEl.textContent = price ? `Price by ticket: $${price}` : '';
+        sectorPriceEl.textContent = price ? `Price per ticket: $${price}` : '';
+        updateTotals();
     }
 
     if (sectorSelect) {

@@ -5,48 +5,53 @@
 {% endblock %}
 {% block title %}Events | PartyFinder{% endblock %}
 {% block content %}
-<h1 class="mb-4 events-title">EVENTS</h1>
+<div class="container-fluid px-4">
+  <h1 class="mb-4 events-title">EVENTS</h1>
 
-<form id="filtersForm" class="row g-2 mb-4" method="get" action="{% url 'events' %}">
-  <div class="col-12 col-md-6">
-    <input class="form-control" name="q" placeholder="Search for event" value="{{ q }}">
-  </div>
+  <form id="filtersForm" class="row g-3 mb-5" method="get" action="{% url 'events' %}">
+    <div class="col-12 col-md-6">
+      <input class="form-control" name="q" placeholder="Search for event" value="{{ q }}">
+    </div>
 
-  <div class="col-6 col-md-3">
-    <input class="form-control" type="date" name="date" value="{{ date }}">
-  </div>
+    <div class="col-6 col-md-3">
+      <input class="form-control" type="date" name="date" value="{{ date }}">
+    </div>
 
-  <div class="col-6 col-md-3">
-    <input class="form-control" name="city" list="cities" placeholder="City" value="{{ city }}">
-    <datalist id="cities">
-      {% for c in cities %}
-        <option value="{{ c }}"></option>
-      {% endfor %}
-    </datalist>
-  </div>
+    <div class="col-6 col-md-3">
+      <input class="form-control" name="city" list="cities" placeholder="City" value="{{ city }}">
+      <datalist id="cities">
+        {% for c in cities %}
+          <option value="{{ c }}"></option>
+        {% endfor %}
+      </datalist>
+    </div>
 
-  <div class="col-12 col-md-6 d-flex align-items-center">
-    <input type="checkbox" name="only_available" value="1" id="onlyAvailableCheck" 
-           {% if only_available %}checked{% endif %} style="display: none;">
-    <label class="toggle-button {% if only_available %}active{% endif %}" for="onlyAvailableCheck" id="toggleLabel">
-      <span class="toggle-knob"></span>
-      <span class="toggle-label">Only available tickets</span>
-    </label>
-  </div>
+    <div class="col-12 col-md-6 d-flex align-items-center">
+      <input type="checkbox" name="only_available" value="1" id="onlyAvailableCheck" 
+             {% if only_available %}checked{% endif %} style="display: none;">
+      <label class="toggle-button {% if only_available %}active{% endif %}" for="onlyAvailableCheck" id="toggleLabel">
+        <span class="toggle-knob"></span>
+        <span class="toggle-label">Only available tickets</span>
+      </label>
+    </div>
 
-  <div class="col-12 text-end">
-    <button type="submit" class="filter-button">FILTER</button>
-    <a class="clear-button" href="{% url 'events' %}">CLEAR</a>
-  </div>
-</form>
+    <div class="col-12 d-flex justify-content-end gap-2">
+      <button type="submit" class="filter-button">FILTER</button>
+      <a class="clear-button" href="{% url 'events' %}">CLEAR</a>
+    </div>
+  </form>
 
-<div class="row g-4">
-  {% for p in events %}
-    <div class="col-12 col-sm-6 col-lg-4">
-      <div class="card party-card h-100 shadow-sm">
-        {% if p.flyer %}
-          <img src="{{ p.flyer.url }}" class="card-img-top object-fit-cover" alt="{{ p.name }} flyer">
-        {% endif %}
+  <div class="row g-4 events-grid">
+    {% for p in events %}
+      <div class="col-12 col-sm-6 col-lg-4">
+        <div class="card party-card h-100">
+          {% if p.flyer %}
+            <img src="{{ p.flyer.url }}" class="card-img-top" alt="{{ p.name }} flyer">
+          {% else %}
+            <div class="card-img-top d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #4A4E69 0%, #22223B 100%);">
+              <span style="color: white; font-size: 2rem; font-weight: 700;">{{ p.name|slice:":1"|upper }}</span>
+            </div>
+          {% endif %}
           <div class="card-body d-flex flex-column align-items-center text-center">
             <h5 class="card-title mb-1 event-card-title card-section-title">{{ p.name|upper }}</h5>
 
@@ -65,42 +70,43 @@
               <a class="btn btn-pf" href="{% url 'event_detail' p.pk %}">VIEW DETAILS</a>
             </div>
           </div>
+        </div>
       </div>
-    </div>
-  {% empty %}
-    <div class="col-12">
-      <div class="alert alert-info text-center">There are no events matching the filter.</div>
-    </div>
-  {% endfor %}
-</div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-info text-center">There are no events matching the filter.</div>
+      </div>
+    {% endfor %}
+  </div>
 
-{% if events.paginator %}
-  <nav class="mt-4" aria-label="Paginación">
-    <ul class="pagination justify-content-center">
-      {% if events.has_previous %}
-        <li class="page-item">
-          <a class="page-link"
-             href="?page={{ events.previous_page_number }}&q={{ q }}&city={{ city }}&date={{ date }}&only_available={{ only_available }}">
-             «
-          </a>
+  {% if events.paginator %}
+    <nav class="mt-5" aria-label="Event pagination">
+      <ul class="pagination justify-content-center">
+        {% if events.has_previous %}
+          <li class="page-item">
+            <a class="page-link"
+               href="?page={{ events.previous_page_number }}&q={{ q }}&city={{ city }}&date={{ date }}&only_available={{ only_available }}">
+               « Previous
+            </a>
+          </li>
+        {% endif %}
+        <li class="page-item disabled">
+          <span class="page-link">
+            Page {{ events.number }} of {{ events.paginator.num_pages }}
+          </span>
         </li>
-      {% endif %}
-      <li class="page-item disabled">
-        <span class="page-link">
-          Page {{ events.number }} of {{ events.paginator.num_pages }}
-        </span>
-      </li>
-      {% if events.has_next %}
-        <li class="page-item">
-          <a class="page-link"
-             href="?page={{ events.next_page_number }}&q={{ q }}&city={{ city }}&date={{ date }}&only_available={{ only_available }}">
-             »
-          </a>
-        </li>
-      {% endif %}
-    </ul>
-  </nav>
-{% endif %}
+        {% if events.has_next %}
+          <li class="page-item">
+            <a class="page-link"
+               href="?page={{ events.next_page_number }}&q={{ q }}&city={{ city }}&date={{ date }}&only_available={{ only_available }}">
+               Next »
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+</div>
 
 {% block scripts %}
 <script src="{% static 'events/js/dynamic_filter.js' %}"></script>
