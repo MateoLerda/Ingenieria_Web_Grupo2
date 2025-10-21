@@ -1,49 +1,229 @@
 body {
-    background: linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url('../img/background-partyfinder.jpeg');
+    background: linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url('../img/background-partyfinder.jpeg');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center top;
     font-family: "Nunito Sans", sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+    gap: 50px;
+}
+
+.hero-section {
+    text-align: center;
+    animation: fadeInDown 1s ease-out;
+}
+
+.logo-container {
+    margin-bottom: 30px;
 }
 
 .app-logo {
-  max-width: 40%;
-  height: auto;
+    max-width: 450px;
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
+}
+
+.app-logo:hover {
+    transform: scale(1.05);
+}
+
+.welcome-text {
+    margin-top: 20px;
+}
+
+.main-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.7);
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+    animation: fadeIn 1.2s ease-out;
+}
+
+.subtitle {
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: #f2e9e4;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+    margin: 0;
+    letter-spacing: 1px;
+    animation: fadeIn 1.5s ease-out;
 }
 
 .home-options {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
-    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    animation: fadeInUp 1.3s ease-out;
+}
+
+.btn-wrapper {
+    position: relative;
 }
 
 .home-btn {
-    width: 300px;
+    width: 280px;
     height: auto;
-    border: none;
-    border-radius: 5px;
-    padding: 15px;
-    font-weight: 600;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    padding: 20px 25px;
+    font-weight: 700;
     text-transform: uppercase;
     font-family: "Nunito Sans", sans-serif;
-    line-height: 21px;
-    font-size: 18px;
-    letter-spacing: 1px;
-    background-color: rgba(34, 34, 59, 0.85);
+    font-size: 16px;
+    letter-spacing: 1.5px;
+    background: linear-gradient(135deg, rgba(34, 34, 59, 0.9), rgba(52, 52, 79, 0.9));
     color: #FFFFFF;
-    transition: .3s ease;
+    transition: all 0.4s ease;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.home-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.home-btn:hover::before {
+    left: 100%;
 }
 
 .home-btn a {
     text-decoration: none;
     color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    white-space: nowrap;
+}
+
+.home-btn i {
+    font-size: 24px;
+    transition: transform 0.3s ease;
+}
+
+.home-btn:hover i {
+    transform: scale(1.2) rotate(10deg);
 }
 
 .home-btn:hover {
-    background-color: #f2e9e4e5;
+    background: linear-gradient(135deg, #f2e9e4, #ffffff);
     color: #22223B;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(242, 233, 228, 0.4);
+    border-color: #f2e9e4;
+}
+
+.home-btn:active {
     transform: translateY(-2px);
-    text-decoration: none;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 992px) {
+    .main-title {
+        font-size: 2.5rem;
+    }
+    
+    .subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .app-logo {
+        max-width: 350px;
+    }
+    
+    .home-options {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .home-container {
+        gap: 40px;
+        padding: 30px 15px;
+    }
+    
+    .main-title {
+        font-size: 2rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .app-logo {
+        max-width: 280px;
+    }
+    
+    .home-options {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .home-btn {
+        width: 100%;
+        max-width: 320px;
+    }
 }

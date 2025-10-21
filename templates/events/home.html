@@ -20,39 +20,53 @@
 
 <body>
     <div class="container-fluid home-container">
-        <div>
-            <img class="app-logo mx-auto d-block" src="{% static 'events/img/partyfinder_logo.jpg' %}" alt="">
+        <div class="hero-section">
+            <div class="logo-container">
+                <img class="app-logo mx-auto d-block" src="{% static 'events/img/partyfinder_logo.jpg' %}" alt="PartyFinder Logo">
+            </div>
+            <div class="welcome-text">
+                <h1 class="main-title">Welcome to PartyFinder</h1>
+                <p class="subtitle">Discover amazing events and create unforgettable memories</p>
+            </div>
         </div>
         <div class="home-options">
-            <button class="home-btn">
-                <a href="{% url 'events' %}">
-                    <i class="fa-solid fa-champagne-glasses"></i>
-                    Check our events!
-                </a>
-            </button>
+            <div class="btn-wrapper">
+                <button class="home-btn">
+                    <a href="{% url 'events' %}">
+                        <i class="fa-solid fa-champagne-glasses"></i>
+                        <span>Check our events!</span>
+                    </a>
+                </button>
+            </div>
             {% if user.is_authenticated %}
             {% if user|has_group:'Event_Organizer' %}
-            <button class="home-btn">
-                 <a href="{% url 'create_event' %}">
-                    <i class="fa-solid fa-money-bill-trend-up"></i>
-                    Publish your event!
-                </a>
-            </button>
+            <div class="btn-wrapper">
+                <button class="home-btn">
+                    <a href="{% url 'create_event' %}">
+                        <i class="fa-solid fa-money-bill-trend-up"></i>
+                        <span>Publish your event!</span>
+                    </a>
+                </button>
+            </div>
             {% endif %}
             {% else %}
-            <button class="home-btn">
-                <a href="{% url 'signup' %}">
-                    <i class="fa-solid fa-handshake"></i>
-                    Join us now
-                </a>
-            </button>
+            <div class="btn-wrapper">
+                <button class="home-btn">
+                    <a href="{% url 'signup' %}">
+                        <i class="fa-solid fa-handshake"></i>
+                        <span>Join us now</span>
+                    </a>
+                </button>
+            </div>
             {% endif %}
-            <button class="home-btn">
-                <a href="{% url 'about' %}">
-                    <i class="fa-solid fa-people-group"></i>
-                    About us
-                </a>
-            </button>
+            <div class="btn-wrapper">
+                <button class="home-btn">
+                    <a href="{% url 'about' %}">
+                        <i class="fa-solid fa-people-group"></i>
+                        <span>About us</span>
+                    </a>
+                </button>
+            </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

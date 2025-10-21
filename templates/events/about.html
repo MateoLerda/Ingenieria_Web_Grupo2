@@ -4,46 +4,69 @@
 {% block title %}About • PartyFinder{% endblock %}
 
 {% block styles %}
-  <link rel="stylesheet" href="{% static 'events/css/events.css' %}">
+  <link rel="stylesheet" href="{% static 'events/css/about.css' %}">
 {% endblock %}
 
 {% block content %}
-<section class="row justify-content-center mt-4">
-  <div class="col-12 col-lg-10">
-    <div class="card shadow-sm border-0">
-      <div class="card-body p-4 p-md-5">
-        <h1 class="h3 mb-3">About PartyFinder</h1>
-        <p class="text-muted mb-4">
-          PartyFinder is a simple, friendly platform to discover events near you and help organizers sell tickets effortlessly.
-          Whether you're looking for concerts, parties, or community gatherings, we make it fast to find and easy to join.
-        </p>
+<section class="about-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-11 col-xl-10">
+        <div class="about-card">
+          
+          <!-- Header Section -->
+          <div class="about-header">
+            <h1 class="about-title">About PartyFinder</h1>
+            <p class="about-subtitle">
+              PartyFinder is a simple, friendly platform to discover events near you and help organizers sell tickets effortlessly.
+              Whether you're looking for concerts, parties, or community gatherings, we make it fast to find and easy to join.
+            </p>
+          </div>
 
-        <div class="row g-4">
-          <div class="col-md-6">
-            <h2 class="h5">For attendees</h2>
-            <ul class="mb-0">
-              <li>Browse upcoming events with clear details and images.</li>
-              <li>Purchase tickets securely in just a few steps.</li>
-              <li>Get instant confirmation after checkout.</li>
-            </ul>
+          <!-- Body Section -->
+          <div class="about-body">
+            <div class="features-grid">
+              
+              <!-- For Attendees Card -->
+              <div class="feature-card">
+                <div class="feature-icon">
+                  <i class="fa-solid fa-users"></i>
+                </div>
+                <h2 class="feature-title">For attendees</h2>
+                <ul class="feature-list">
+                  <li>Browse upcoming events with clear details and images.</li>
+                  <li>Purchase tickets securely in just a few steps.</li>
+                  <li>Get instant confirmation after checkout.</li>
+                </ul>
+              </div>
+
+              <!-- For Organizers Card -->
+              <div class="feature-card">
+                <div class="feature-icon">
+                  <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <h2 class="feature-title">For organizers</h2>
+                <ul class="feature-list">
+                  <li>Create events with sectors, pricing, and media.</li>
+                  <li>Manage availability and track tickets in real time.</li>
+                  <li>Share your event page to reach your audience.</li>
+                </ul>
+              </div>
+
+            </div>
+
+            <!-- Mission Section -->
+            <div class="mission-section">
+              <h2 class="mission-title">Our mission</h2>
+              <p class="mission-text">
+                We aim to connect people with great experiences and give organizers the tools they need to grow their events—without the complexity.
+              </p>
+            </div>
           </div>
-          <div class="col-md-6">
-            <h2 class="h5">For organizers</h2>
-            <ul class="mb-0">
-              <li>Create events with sectors, pricing, and media.</li>
-              <li>Manage availability and track tickets in real time.</li>
-              <li>Share your event page to reach your audience.</li>
-            </ul>
-          </div>
+
         </div>
-
-        <hr class="my-4">
-
-        <h2 class="h5 mb-2">Our mission</h2>
-        <p class="mb-0">We aim to connect people with great experiences and give organizers the tools they need to grow their events—without the complexity.</p>
       </div>
     </div>
   </div>
-  
 </section>
 {% endblock %}
