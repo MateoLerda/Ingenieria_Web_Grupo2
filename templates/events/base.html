@@ -19,31 +19,50 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'home' %}">
+        <a class="navbar-brand" href="{% url 'home' %}" title="PartyFinder Home">
           <img class="app-logo" src="{% static 'events/img/partyfinder_logo.jpg' %}" alt="PartyFinder app logo">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarContent">
-          <ul class="navbar-nav mr-auto">
+          <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <a class="nav-link nav-link-theme" href="{% url 'events' %}">EVENTS
+              <a class="nav-link nav-link-theme" href="{% url 'events' %}">
+                <i class="fas fa-calendar-alt"></i> Events
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link nav-link-theme" href="{% url 'about' %}">About</a>
+              <a class="nav-link nav-link-theme" href="{% url 'about' %}">
+                <i class="fas fa-info-circle"></i> About
+              </a>
             </li>
           </ul>
+          <div class="d-flex flex-wrap align-items-center gap-2">
+            {% if user.is_authenticated %}
+              {% if user.is_staff %}
+                <a class="nav-buttons" href="/admin/">
+                  <i class="fas fa-user-shield"></i> Admin
+                </a>
+              {% endif %}
+              {% if user|has_group:'Event_Organizer' %}
+                <a class="nav-buttons" href="{% url 'create_event' %}">
+                  <i class="fas fa-plus-circle"></i> Create Event
+                </a>
+              {% endif %}
+              <a class="nav-buttons" href="{% url 'logout' %}">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </a>
+            {% else %}
+              <a class="nav-buttons" href="{% url 'login' %}">
+                <i class="fas fa-sign-in-alt"></i> Login
+              </a>
+              <a class="nav-buttons" href="{% url 'signup' %}">
+                <i class="fas fa-user-plus"></i> Sign Up
+              </a>
+            {% endif %}
+          </div>
         </div>
-          {% if user.is_authenticated %}
-            {% if user.is_staff %}<a class="nav-buttons nav-link-theme" href="/admin/">Admin</a>{% endif %}
-            {% if user|has_group:'Event_Organizer' %}<a class="nav-buttons nav-link-theme" href="{% url 'create_event' %}">Create Event</a>{% endif %}
-              <a class="nav-buttons nav-link-theme" href="{% url 'logout' %}">Logout</a>
-          {% else %}
-              <a class="nav-buttons nav-link-theme" href="{% url 'login' %}">Login</a>
-              <a class="nav-buttons nav-link-theme" href="{% url 'signup' %}">Sign Up</a>
-          {% endif %}
       </div>
   </nav>
   <main class="py-4">
