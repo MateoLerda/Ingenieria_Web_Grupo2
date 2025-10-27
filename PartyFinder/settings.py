@@ -99,7 +99,7 @@ ROOT_URLCONF = 'PartyFinder.urls'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR  / 'media'
-
+DATA_DIR = Path("/data")
 
 
 WSGI_APPLICATION = 'PartyFinder.wsgi.application'
@@ -107,12 +107,18 @@ WSGI_APPLICATION = 'PartyFinder.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+if DATA_DIR.exists():
+    DB_PATH = DATA_DIR / "db.sqlite3"  
+else:
+    DB_PATH = BASE_DIR / "db.sqlite3"  
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': DB_PATH,
     }
+
+
 }
 
 
