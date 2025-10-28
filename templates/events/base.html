@@ -37,6 +37,13 @@
                 <i class="fas fa-info-circle"></i> About
               </a>
             </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link nav-link-theme" href="{% url 'my_tickets' %}">
+                <i class="fa-solid fa-ticket"></i> My Tickets
+              </a>
+            </li>
+            {% endif %}
           </ul>
           <div class="d-flex flex-wrap align-items-center gap-2">
             {% if user.is_authenticated %}

@@ -261,7 +261,8 @@
 }
 
 .btn-home,
-.btn-events {
+.btn-events,
+.btn-tickets {
   padding: 0.875rem 2rem;
   border-radius: 10px;
   font-weight: 600;
@@ -269,6 +270,21 @@
   text-decoration: none;
   transition: all 0.3s ease;
   display: inline-block;
+}
+
+.btn-tickets {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-tickets:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+  color: white;
+  background: linear-gradient(135deg, #45a049 0%, #4CAF50 100%);
 }
 
 .btn-home {
@@ -351,7 +367,8 @@
   }
 
   .btn-home,
-  .btn-events {
+  .btn-events,
+  .btn-tickets {
     width: 100%;
   }
 

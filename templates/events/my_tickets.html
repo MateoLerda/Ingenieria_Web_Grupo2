@@ -1,0 +1,78 @@
+{% extends 'events/base.html' %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'events/css/my_tickets.css' %}">
+{% endblock %}
+{% block title %}My Tickets | PartyFinder{% endblock %}
+{% block content %}
+<div class="container-fluid px-4">
+  <h1 class="mb-4">My Tickets</h1>
+
+  {% if user_tickets %}
+    <div class="row g-4">
+      {% for ticket in user_tickets %}
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="card">
+            <div class="card-body">
+              {% if ticket.event_sector.event.flyer %}
+                <div class="ticket-flyer">
+                  <img src="{{ ticket.event_sector.event.flyer.url }}" alt="Flyer of {{ ticket.event_sector.event.name }}">
+                </div>
+              {% endif %}
+              
+              <h5 class="card-title">{{ ticket.event_sector.event.name }}</h5>
+              
+              <div class="ticket-info-section">
+                <p class="card-text">
+                  <svg class="ticket-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                  <strong>Date:</strong> &nbsp;{{ ticket.event_sector.event.date|date:"F d, Y" }}
+                </p>
+                <p class="card-text">
+                  <svg class="ticket-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  <strong>Location:</strong> &nbsp;{{ ticket.event_sector.event.city }}, {{ ticket.event_sector.event.country }}
+                </p>
+              </div>
+              
+              <div class="ticket-details-section">
+                <p class="card-text">
+                  <svg class="ticket-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/>
+                    <path d="m9 12 2 2 4-4"/>
+                  </svg>
+                  <strong>Sector:</strong> &nbsp;{{ ticket.event_sector.sector_name }}
+                </p>
+                <p class="card-text">
+                  <svg class="ticket-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M2 7h20M2 12h20M2 17h20"/>
+                  </svg>
+                  <strong>Quantity:</strong> &nbsp;{{ ticket.quantity }} ticket{{ ticket.quantity|pluralize }}
+                </p>
+                <p class="card-text">
+                  <svg class="ticket-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23"/>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                  </svg>
+                  <strong>Price:</strong> &nbsp;${{ ticket.total_price }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">
+      <i class="fa-solid fa-ticket"></i>
+      &nbsp; You have no tickets purchased yet. Start exploring events!
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

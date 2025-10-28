@@ -44,7 +44,8 @@ urlpatterns = [
     path("purchase_success/", event_views.purchase_success, name="purchase_success"),
     path('search/', include('haystack.urls')),
     path('rebuild_index/', event_views.rebuild_index, name='rebuild_index'),
-     path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
+    path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
+    path("my_tickets/", event_views.my_tickets, name="my_tickets"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

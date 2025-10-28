@@ -16,6 +16,7 @@ from django.core.management import call_command
 from django.http import JsonResponse
 from decimal import Decimal
 
+
 def home_view(request):
     return render(request, 'events/home.html')
 
@@ -381,3 +382,9 @@ def rebuild_index(request):
 def purchase_success(request):
     return render(request, "events/purchase_success.html")
 
+
+@login_required
+def my_tickets(request):
+    user_tickets = Purchase.objects.filter(user=request.user).select_related('event_sector__event').order_by('event_sector__event__date')
+
+    return render(request, "events/my_tickets.html", {"user_tickets": user_tickets})

@@ -29,9 +29,13 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET")
 
 SITE_ID = 4
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG")
+DEBUG = os.environ.get("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = []
+# Configurar ALLOWED_HOSTS según el entorno
+if os.environ.get('RUNNING_IN_DOCKER'):
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '*']
+else:
+    ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
