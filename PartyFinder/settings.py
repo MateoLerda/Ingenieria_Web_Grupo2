@@ -107,7 +107,8 @@ WSGI_APPLICATION = 'PartyFinder.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-if DATA_DIR.exists():
+# Usar /data/db.sqlite3 solo cuando se ejecuta en Docker
+if os.environ.get('RUNNING_IN_DOCKER'):
     DB_PATH = DATA_DIR / "db.sqlite3"  
 else:
     DB_PATH = BASE_DIR / "db.sqlite3"  
@@ -117,8 +118,6 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': DB_PATH,
     }
-
-
 }
 
 
