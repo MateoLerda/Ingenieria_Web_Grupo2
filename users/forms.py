@@ -23,3 +23,9 @@ class CustomUserCreationForm(UserCreationForm):
         if not re.match(r'^[A-Za-zÁÉÍÓÚáéíóúÑñüÜ\s]+$', full_name):
             raise forms.ValidationError('Full name can only contain alphabetic characters and spaces.')
         return full_name
+    
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if CustomUserModel.objects.filter(username=username).exists():
+            raise forms.ValidationError('This username is already taken.')
+        return username

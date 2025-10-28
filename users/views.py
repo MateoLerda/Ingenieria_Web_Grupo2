@@ -17,6 +17,9 @@ from datetime import date
 import re
 
 # Create your views here.
+'''
+Desacttivamos la validación de usuario por mail debido a bloqueos por parte de gmail que impiden su funcionamiento correcto.
+
 def activate_account(request, uidb64, token):
     User = get_user_model()
     try:
@@ -32,6 +35,7 @@ def activate_account(request, uidb64, token):
     else:
         messages.error(request, 'Activation link is invalid!')
     return redirect('home')
+
 
 def activateEmail(request, user, to_email, user_fullname):
     email_subject = "Activate your PartyFinder account!"
@@ -49,7 +53,7 @@ def activateEmail(request, user, to_email, user_fullname):
         messages.info(request, f'Please confirm your email address to complete the registration. An activation link has been sent to {to_email}.')
     else:
         messages.warning(request, f'Error sending email to {to_email}. Please check if you typed it correctly or try again later.')
-
+'''
 def signup_view(request): 
     if request.user.is_authenticated:
         return redirect('events')
@@ -68,9 +72,9 @@ def signup_view(request):
                 messages.error(request, 'You must be at least 18 years old to register.')
                 return render(request, 'users/signup.html', {'form': form })
             user = form.save(commit=False)
-            user.is_active = False
+            user.is_active = True  # Desactivamos la activación por email
             user.save()
-            activateEmail(request, user, form.cleaned_data.get('email'), form.cleaned_data.get('full_name'))
+            # activateEmail(request, user, form.cleaned_data.get('email'), form.cleaned_data.get('full_name'))
             return redirect('login')
         else:
             errors = form.errors
@@ -84,7 +88,7 @@ def signup_view(request):
     
 
 def login_view(request):
-    next_url = request.GET.get('next', '/')
+    next_url = request.GET.get('next', '/events')
     if request.user.is_authenticated:
         return redirect(next_url)
 
@@ -97,11 +101,12 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
+            messages.success(request, f'Successfully logged in as {user.username}')
             next_url = request.POST.get('next', next_url)
             parsed_url = urlparse(next_url)
             if not parsed_url.netloc and is_valid_path(next_url):
                 return redirect(next_url)
-            return redirect('/events')
+            return redirect('events')
         else:
             messages.error(request, 'Invalid username or password.')
             return render(request, 'users/login.html', {'form': form, 'next': next_url})

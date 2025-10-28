@@ -296,11 +296,18 @@ main {
 
 /* Alert Messages */
 .alert {
-  border-radius: 12px;
+  border-radius: 8px;
   border: none;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin-bottom: 1.5rem;
-  animation: slideInDown 0.4s ease-out;
+  padding: 14px 45px 14px 16px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  animation: slideInDown 0.3s ease-out;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.5;
 }
 
 @keyframes slideInDown {
@@ -317,25 +324,40 @@ main {
 .alert-success {
   background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
   color: #155724;
+  border-left: 4px solid #28a745;
 }
 
 .alert-danger {
   background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
   color: #721c24;
+  border-left: 4px solid #dc3545;
 }
 
 .alert-warning {
   background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
   color: #856404;
+  border-left: 4px solid #ffc107;
 }
 
 .alert-info {
   background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
   color: #0c5460;
+  border-left: 4px solid #17a2b8;
 }
 
 .alert .btn-close {
-  filter: brightness(0.7);
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.6;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  filter: none;
+}
+
+.alert .btn-close:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
 }
 
 /* Smooth Transitions */

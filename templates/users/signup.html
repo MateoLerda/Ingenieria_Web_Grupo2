@@ -1,16 +1,13 @@
 {% extends 'users/base-user-form.html' %}
 {% load widget_tweaks %}
 {% load static %}
-{% block styles %}
-<link rel="stylesheet" href="{% static 'users/css/signup.css' %}">
-{% endblock %}
 {% block title %} <title>Register | PartyFinder</title> {% endblock %}
 {% block content %}
 {% if messages %}
   {% for message in messages %}
-    <div class="message message-{{ message.tags }} fw-bold position-relative">
-      {{ message|striptags }} 
-      <button type="button" class="btn-close position-absolute top-0 end-0 m-1" aria-label="Close" onclick="this.parentElement.style.display='none';"></button>
+    <div class="message message-{{ message.tags }}" role="alert">
+      {{ message|striptags }}
+      <button type="button" class="btn-close" aria-label="Close" onclick="this.parentElement.style.display='none';"></button>
     </div>
   {% endfor %}
 {% endif %}

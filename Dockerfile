@@ -6,6 +6,13 @@ ENV LANG=C.UTF-8
 ENV PYTHONUTF8=1
 ENV RUNNING_IN_DOCKER=1
 
+# Variables de entorno para el superuser (pueden ser sobrescritas)
+ENV DJANGO_SUPERUSER_USERNAME=admin
+ENV DJANGO_SUPERUSER_EMAIL=status418@gmail.com
+ENV DJANGO_SUPERUSER_PASSWORD=Status418
+ENV DJANGO_SUPERUSER_FULL_NAME="Admin User"
+ENV DJANGO_SUPERUSER_BIRTH_DATE=2003-07-03
+
 WORKDIR /app
 
 # Instalar dependencias del sistema
@@ -32,4 +39,5 @@ EXPOSE 8000
 CMD python manage.py migrate && \
     python manage.py collectstatic --noinput && \
     python init_social_auth.py && \
+    python create_superuser.py && \
     python manage.py runserver 0.0.0.0:8000
